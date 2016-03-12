@@ -9,4 +9,8 @@ public class RouterTest extends TestCase {
 		ListTableRoute route = (ListTableRoute) new Router(null).findRoute("/table_name/");
 		assertEquals("table_name", route.table);
 	}
+
+	public void testDetailRoute() {
+		assertFalse(new Router(null).getDetailRoute("table", "funky/id").contains("funky/id"));
+	}
 }

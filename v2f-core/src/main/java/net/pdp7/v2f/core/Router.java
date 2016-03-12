@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.common.net.UrlEscapers;
+
 public class Router {
 
 	public static final Pattern LIST_TABLE_PATTERN = Pattern.compile("^/(.*)/$");
@@ -55,13 +57,13 @@ public class Router {
 		public final String table;
 		public final String id;
 
-		private DetailRoute(String table, String id) {
+		protected DetailRoute(String table, String id) {
 			this.table = table;
 			this.id = id;
 		}
 
 		public String getPath() {
-			return "/" + table + "/" + id + "/";
+			return "/" + table + "/" + UrlEscapers.urlFormParameterEscaper().escape(id) + "/";
 		}
 
 		@Override
