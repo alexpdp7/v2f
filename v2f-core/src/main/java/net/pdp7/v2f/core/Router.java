@@ -11,18 +11,25 @@ import com.google.common.net.UrlEscapers;
 
 public class Router {
 
-	public static final Pattern LIST_TABLE_PATTERN = Pattern.compile("^/(.*)/$");
+	public static final Pattern LIST_TABLE_PATTERN = Pattern.compile("^/([^/]*)/$");
+	public static final Pattern DETAIL_TABLE_PATTERN = Pattern.compile("^/([^/]*)/([^/]*)/$");
 
 	protected final ListHandler listHandler;
+	protected final DetailHandler detailHandler;
 
-	public Router(ListHandler listHandler) {
+	public Router(ListHandler listHandler, DetailHandler detailHandler) {
 		this.listHandler = listHandler;
+		this.detailHandler = detailHandler;
 	}
 
 	protected Route findRoute(String pathInfo) throws RouteNotFoundException {
 		Matcher tableMatcher = LIST_TABLE_PATTERN.matcher(pathInfo);
 		if (tableMatcher.matches()) {
 			return new ListTableRoute(tableMatcher.group(1));
+		}
+		Matcher detailMatcher = DETAIL_TABLE_PATTERN.matcher(pathInfo);
+		if (detailMatcher.matches()) {
+			return new DetailRoute(detailMatcher.group(1), detailMatcher.group(2));
 		}
 		throw new RouteNotFoundException("no route found for " + pathInfo);
 	}
@@ -68,9 +75,8 @@ public class Router {
 
 		@Override
 		protected void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-			throw new UnsupportedOperationException("not implemented yet");
+			detailHandler.handle(table, id, request, response);
 		}
-		
 	}
 	
 	protected static class RouteNotFoundException extends RuntimeException {

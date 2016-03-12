@@ -11,12 +11,17 @@ public class DefaultConfiguration {
 
 	@Bean
 	public Router router() {
-		return new Router(listHandler());
+		return new Router(listHandler(), detailHandler());
 	}
 
 	@Bean
 	public ListHandler listHandler() {
 		return new ListHandler(dslContext, viewResolver, localeResolver());
+	}
+
+	@Bean
+	public DetailHandler detailHandler() {
+		return new DetailHandler(dslContext, viewResolver, localeResolver());
 	}
 
 	@Bean
