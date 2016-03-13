@@ -1,1 +1,7 @@
-<pre th:text="${record}">record</pre>
+<form th:action="${row.link}" method="post">
+	<label th:each="column: ${row.columns}" th:inline="text">
+		[[${column.name}]]
+		<input type="text" th:name="${column.name}" th:value="${column.value}"/>
+	</label>
+</form>
+

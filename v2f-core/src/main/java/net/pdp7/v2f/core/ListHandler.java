@@ -13,17 +13,21 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
 import com.google.common.collect.ImmutableMap;
 
+import schemacrawler.schema.Catalog;
+
 public class ListHandler {
 
 	protected final DSLContext dslContext;
 	protected final ThymeleafViewResolver viewResolver;
 	protected final LocaleResolver localeResolver;
+	protected final Catalog catalog;
 	protected Router router;
 
-	public ListHandler(DSLContext dslContext, ThymeleafViewResolver viewResolver, LocaleResolver localeResolver) {
+	public ListHandler(DSLContext dslContext, ThymeleafViewResolver viewResolver, LocaleResolver localeResolver, Catalog catalog) {
 		this.dslContext = dslContext;
 		this.viewResolver = viewResolver;
 		this.localeResolver = localeResolver;
+		this.catalog = catalog;
 	}
 
 	public void setRouter(Router router) {
@@ -36,7 +40,7 @@ public class ListHandler {
 			List<RowWrapper> rows = dslContext
 					.select(field("_id"), field("_as_string"))
 					.from(table)
-					.fetch(record -> new RowWrapper(router, table, record));
+					.fetch(record -> new RowWrapper(router, catalog, table, record));
 			viewResolver
 					.resolveViewName("list", localeResolver.resolve(request))
 					.render(ImmutableMap.of("rows", rows), request, response);

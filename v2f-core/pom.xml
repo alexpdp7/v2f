@@ -29,6 +29,11 @@
 			<artifactId>jooq</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>us.fatehi</groupId>
+			<artifactId>schemacrawler</artifactId>
+			<version>14.07.03</version>
+		</dependency>
+		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
