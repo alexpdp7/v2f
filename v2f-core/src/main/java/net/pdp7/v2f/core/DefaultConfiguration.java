@@ -63,7 +63,7 @@ public class DefaultConfiguration {
 
 	@Autowired
 	protected DataSource dataSource;
-	
+
 	@Autowired
 	protected DSLContext dslContext;
 

@@ -20,7 +20,8 @@ public class DetailHandler {
 	protected final Catalog catalog;
 	protected Router router;
 
-	public DetailHandler(DSLContext dslContext, ThymeleafViewResolver viewResolver, LocaleResolver localeResolver, Catalog catalog) {
+	public DetailHandler(DSLContext dslContext, ThymeleafViewResolver viewResolver, LocaleResolver localeResolver,
+			Catalog catalog) {
 		this.dslContext = dslContext;
 		this.viewResolver = viewResolver;
 		this.localeResolver = localeResolver;
@@ -34,15 +35,14 @@ public class DetailHandler {
 	public void handle(String table, String id, HttpServletRequest request, HttpServletResponse response) {
 		try {
 			RowWrapper row = dslContext
-				.select()
-				.from(table)
-				.where(field("_id").equal(id))
-				.fetchOne(record -> new RowWrapper(router, catalog, table, record));
+					.select()
+					.from(table)
+					.where(field("_id").equal(id))
+					.fetchOne(record -> new RowWrapper(router, catalog, table, record));
 			viewResolver
-				.resolveViewName("detail", localeResolver.resolve(request))
-				.render(ImmutableMap.of("row", row), request, response);
-		}
-		catch(Exception e) {
+					.resolveViewName("detail", localeResolver.resolve(request))
+					.render(ImmutableMap.of("row", row), request, response);
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}

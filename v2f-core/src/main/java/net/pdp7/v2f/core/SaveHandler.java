@@ -22,7 +22,7 @@ public class SaveHandler {
 	public SaveHandler(DSLContext dslContext) {
 		this.dslContext = dslContext;
 	}
-	
+
 	public void handle(HttpServletRequest request, HttpServletResponse response) {
 		request.getParameterMap().entrySet().stream()
 				.filter(e -> Router.FormInputName.booleanIsFormInputName(e.getKey()))
@@ -38,17 +38,17 @@ public class SaveHandler {
 				.where(field("_id").equal(tableAndId.id))
 				.execute();
 	}
-	
+
 	protected static class FormValue {
 		public final FormInputName formInputName;
 		public final String value;
 
 		protected FormValue(Map.Entry<String, String[]> entry) {
-			
+
 			formInputName = new Router.FormInputName(entry.getKey());
 			value = entry.getValue()[0];
 		}
-	
+
 		public TableAndId getTableAndId() {
 			return new TableAndId(formInputName.table, formInputName.id);
 		}
@@ -70,12 +70,12 @@ public class SaveHandler {
 
 		@Override
 		public boolean equals(Object obj) {
-			if(! (obj instanceof TableAndId)) {
+			if (!(obj instanceof TableAndId)) {
 				return false;
 			}
 			TableAndId other = (TableAndId) obj;
 			return table.equals(other.table) && id.equals(other.id);
 		}
 	}
-	
+
 }

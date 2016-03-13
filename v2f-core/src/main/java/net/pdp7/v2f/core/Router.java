@@ -43,9 +43,9 @@ public class Router {
 	public String getDetailRoute(String table, String id) {
 		return new DetailRoute(table, id).getPath();
 	}
-	
+
 	public String getFormInputName(String table, String id, String column) {
-		return table + "/" +UrlEscapers.urlFormParameterEscaper().escape(id) + "/" + column;
+		return table + "/" + UrlEscapers.urlFormParameterEscaper().escape(id) + "/" + column;
 	}
 
 	public static class FormInputName {
@@ -65,7 +65,7 @@ public class Router {
 			return FORM_INPUT_NAME_PATTERN.matcher(raw).matches();
 		}
 	}
-	
+
 	protected abstract class Route {
 		protected abstract void execute(HttpServletRequest request, HttpServletResponse response) throws IOException;
 	}
@@ -73,7 +73,7 @@ public class Router {
 	protected class ListTableRoute extends Route {
 		public final String table;
 
-		private ListTableRoute(String table) {
+		protected ListTableRoute(String table) {
 			this.table = table;
 		}
 
@@ -101,9 +101,9 @@ public class Router {
 			detailHandler.handle(table, id, request, response);
 		}
 	}
-	
+
 	protected static class RouteNotFoundException extends RuntimeException {
-		private RouteNotFoundException(String message) {
+		protected RouteNotFoundException(String message) {
 			super(message);
 		}
 	}
