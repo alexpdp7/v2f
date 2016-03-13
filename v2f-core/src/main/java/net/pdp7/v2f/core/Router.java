@@ -12,7 +12,7 @@ import com.google.common.net.UrlEscapers;
 public class Router {
 
 	public static final Pattern LIST_TABLE_PATTERN = Pattern.compile("^/([^/]*)/$");
-	public static final Pattern DETAIL_TABLE_PATTERN = Pattern.compile("^/([^/]*)/([^/]*)/$");
+	public static final Pattern DETAIL_TABLE_PATTERN = Pattern.compile("^/([^/]*)/detail/([^/]*)/$");
 	public static final Pattern FORM_INPUT_NAME_PATTERN = Pattern.compile("^([^/]*)/([^/]*)/([^/]*)$");
 
 	protected final ListHandler listHandler;
@@ -93,7 +93,7 @@ public class Router {
 		}
 
 		public String getPath() {
-			return "/" + table + "/" + UrlEscapers.urlFormParameterEscaper().escape(id) + "/";
+			return "/" + table + "/detail/" + UrlEscapers.urlFormParameterEscaper().escape(id) + "/";
 		}
 
 		@Override
