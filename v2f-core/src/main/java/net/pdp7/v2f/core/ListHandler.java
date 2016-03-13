@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jooq.DSLContext;
-import org.jooq.Record;
 import org.jooq.exception.DataAccessException;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
@@ -34,38 +33,15 @@ public class ListHandler {
 	public void handle(String table, HttpServletRequest request, HttpServletResponse response)
 			throws DataAccessException {
 		try {
-			List<Row> rows = dslContext
+			List<RowWrapper> rows = dslContext
 					.select(field("_id"), field("_as_string"))
 					.from(table)
-					.fetch(record -> new Row(table, record));
+					.fetch(record -> new RowWrapper(router, table, record));
 			viewResolver
 					.resolveViewName("list", localeResolver.resolve(request))
 					.render(ImmutableMap.of("rows", rows), request, response);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	protected class Row {
-		protected final Record record;
-		protected final String table;
-
-		public Row(String table, Record record) {
-			this.table = table;
-			this.record = record;
-		}
-
-		public String getAsString() {
-			return (String) record.getValue("_as_string");
-		}
-
-		public String getId() {
-			return (String) record.getValue("_id");
-		}
-
-		public String getLink() {
-			return router.getDetailRoute(table, getId());
-		}
-		
 	}
 }
