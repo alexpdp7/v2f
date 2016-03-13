@@ -34,6 +34,11 @@ public class DefaultConfiguration {
 	}
 
 	@Bean
+	public SaveHandler saveHandler() {
+		return new SaveHandler(dslContext);
+	}
+
+	@Bean
 	public LocaleResolver localeResolver() {
 		return new LocaleResolver();
 	}

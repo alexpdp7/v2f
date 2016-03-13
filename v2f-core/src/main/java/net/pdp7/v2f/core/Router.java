@@ -13,6 +13,7 @@ public class Router {
 
 	public static final Pattern LIST_TABLE_PATTERN = Pattern.compile("^/([^/]*)/$");
 	public static final Pattern DETAIL_TABLE_PATTERN = Pattern.compile("^/([^/]*)/([^/]*)/$");
+	public static final Pattern FORM_INPUT_NAME_PATTERN = Pattern.compile("^([^/]*)/([^/]*)/([^/]*)$");
 
 	protected final ListHandler listHandler;
 	protected final DetailHandler detailHandler;
@@ -41,6 +42,28 @@ public class Router {
 
 	public String getDetailRoute(String table, String id) {
 		return new DetailRoute(table, id).getPath();
+	}
+	
+	public String getFormInputName(String table, String id, String column) {
+		return table + "/" +UrlEscapers.urlFormParameterEscaper().escape(id) + "/" + column;
+	}
+
+	public static class FormInputName {
+		public final String table;
+		public final String id;
+		public final String column;
+
+		public FormInputName(String raw) {
+			Matcher matcher = FORM_INPUT_NAME_PATTERN.matcher(raw);
+			matcher.matches();
+			table = matcher.group(1);
+			id = matcher.group(2);
+			column = matcher.group(3);
+		}
+
+		public static boolean booleanIsFormInputName(String raw) {
+			return FORM_INPUT_NAME_PATTERN.matcher(raw).matches();
+		}
 	}
 	
 	protected abstract class Route {

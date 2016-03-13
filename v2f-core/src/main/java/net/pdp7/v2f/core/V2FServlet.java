@@ -12,14 +12,19 @@ public class V2FServlet extends HttpServlet {
 
 	protected final DSLContext dslContext;
 	protected final Router router;
+	protected final SaveHandler saveHandler;
 
-	public V2FServlet(DSLContext dslContext, Router router) {
+	public V2FServlet(DSLContext dslContext, Router router, SaveHandler saveHandler) {
 		this.dslContext = dslContext;
 		this.router = router;
+		this.saveHandler = saveHandler;
 	}
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		if(request.getMethod().equals("POST") && request.getParameter("action").equals("save")) {
+			saveHandler.handle(request, response);
+		}
 		router.route(request, response);
 	}
 

@@ -1,7 +1,8 @@
 <form th:action="${row.link}" method="post">
 	<label th:each="column: ${row.columns}" th:inline="text">
 		[[${column.name}]]
-		<input type="text" th:name="${column.name}" th:value="${column.value}"/>
+		<input type="text" th:name="${column.formInputName}" th:value="${column.value}"/>
 	</label>
+	<input type="submit" name="action" value="save"/>
 </form>
 

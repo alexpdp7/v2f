@@ -56,5 +56,9 @@ public class RowWrapper {
 		public Object getValue() {
 			return record.getValue(getName());
 		}
+
+		public String getFormInputName() {
+			return router.getFormInputName(table, getId(), getName());
+		}
 	}
 }
