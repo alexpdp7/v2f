@@ -3,6 +3,7 @@ package net.pdp7.v2f.core;
 import static org.jooq.impl.DSL.field;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,10 +41,14 @@ public class ListHandler {
 			List<RowWrapper> rows = dslContext
 					.select(field("_id"), field("_as_string"))
 					.from(table)
-					.fetch(record -> new RowWrapper(router, catalog, table, record));
+					.fetch(record -> new RowWrapper(router, catalog, table, record, null));
+			Map<String, ?> model = new ImmutableMap.Builder<String, Object>()
+					.put("rows", rows)
+					.put("new_url", router.getNewRoute(table))
+					.build();
 			viewResolver
 					.resolveViewName("list", localeResolver.resolve(request))
-					.render(ImmutableMap.of("rows", rows), request, response);
+					.render(model, request, response);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

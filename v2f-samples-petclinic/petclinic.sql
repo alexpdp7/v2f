@@ -5,6 +5,18 @@ create table species (
   name                       text not null
 );
 
+create or replace function species_auto_id() returns trigger as $species_auto_id$
+  begin
+    if new.species_id is null then
+      new.species_id = lower(left(new.name, 100));
+    end if;
+    return new;
+  end;
+$species_auto_id$ language plpgsql;
+
+drop trigger if exists species_auto_id on species;
+create trigger species_auto_id before insert on species for each row execute procedure species_auto_id();
+
 create table owners (
   owner_id                   serial primary key,
   name                       text not null,

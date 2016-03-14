@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jooq.DSLContext;
+import org.jooq.Record;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
 import com.google.common.collect.ImmutableMap;
@@ -32,19 +33,35 @@ public class DetailHandler {
 		this.router = router;
 	}
 
+	/**
+	 * @param id is null for "new" rows
+	 */
 	public void handle(String table, String id, HttpServletRequest request, HttpServletResponse response) {
 		try {
-			RowWrapper row = dslContext
-					.select()
-					.from(table)
-					.where(field("_id").equal(id))
-					.fetchOne(record -> new RowWrapper(router, catalog, table, record));
+			RowWrapper row = new RowWrapper(
+					router,
+					catalog,
+					table,
+					id == null ? null : loadRecord(table, id),
+					id == null ? "0" : null);
 			viewResolver
 					.resolveViewName("detail", localeResolver.resolve(request))
 					.render(ImmutableMap.of("row", row), request, response);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	protected Record loadRecord(String table, String id) {
+		Record record = dslContext
+				.select()
+				.from(table)
+				.where(field("_id").equal(id))
+				.fetchOne();
+		if (record == null) {
+			throw new RuntimeException("could not load record with id " + id);
+		}
+		return record;
 	}
 
 }

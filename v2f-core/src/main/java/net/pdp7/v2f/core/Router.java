@@ -13,7 +13,8 @@ public class Router {
 
 	public static final Pattern LIST_TABLE_PATTERN = Pattern.compile("^/([^/]*)/$");
 	public static final Pattern DETAIL_TABLE_PATTERN = Pattern.compile("^/([^/]*)/detail/([^/]*)/$");
-	public static final Pattern FORM_INPUT_NAME_PATTERN = Pattern.compile("^([^/]*)/([^/]*)/([^/]*)$");
+	public static final Pattern NEW_TABLE_PATTERN = Pattern.compile("^/([^/]*)/new/$");
+	public static final Pattern FORM_INPUT_NAME_PATTERN = Pattern.compile("^([^/]*)/((?:new)|(?:id))/([^/]*)/([^/]*)$");
 
 	protected final ListHandler listHandler;
 	protected final DetailHandler detailHandler;
@@ -32,6 +33,10 @@ public class Router {
 		if (detailMatcher.matches()) {
 			return new DetailRoute(detailMatcher.group(1), detailMatcher.group(2));
 		}
+		Matcher newMatcher = NEW_TABLE_PATTERN.matcher(pathInfo);
+		if (newMatcher.matches()) {
+			return new NewRoute(newMatcher.group(1));
+		}
 		throw new RouteNotFoundException("no route found for " + pathInfo);
 	}
 
@@ -44,21 +49,34 @@ public class Router {
 		return new DetailRoute(table, id).getPath();
 	}
 
-	public String getFormInputName(String table, String id, String column) {
-		return table + "/" + UrlEscapers.urlFormParameterEscaper().escape(id) + "/" + column;
+	public String getNewRoute(String table) {
+		return new NewRoute(table).getPath();
+	}
+
+	/** @see FormInputName */
+	public String getFormInputName(String table, String id, String column, String newFormId) {
+		return table + "/"
+				+ (id == null ? "new/" + newFormId + "/" : "id/" + UrlEscapers.urlFormParameterEscaper().escape(id) + "/")
+				+ column;
 	}
 
 	public static class FormInputName {
 		public final String table;
+		/** null for "new" rows */
 		public final String id;
 		public final String column;
+		/** non-null for "new" rows; can use distinct values to have multiple
+		 * new forms
+		 */
+		public final String newFormId;
 
 		public FormInputName(String raw) {
 			Matcher matcher = FORM_INPUT_NAME_PATTERN.matcher(raw);
 			matcher.matches();
 			table = matcher.group(1);
-			id = matcher.group(2);
-			column = matcher.group(3);
+			id = matcher.group(2).equals("id") ? matcher.group(3) : null;
+			newFormId = matcher.group(2).equals("id") ? null : matcher.group(3);
+			column = matcher.group(4);
 		}
 
 		public static boolean booleanIsFormInputName(String raw) {
@@ -99,6 +117,23 @@ public class Router {
 		@Override
 		protected void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 			detailHandler.handle(table, id, request, response);
+		}
+	}
+
+	protected class NewRoute extends Route {
+		public final String table;
+
+		protected NewRoute(String table) {
+			this.table = table;
+		}
+
+		public String getPath() {
+			return "/" + table + "/new/";
+		}
+
+		@Override
+		protected void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
+			detailHandler.handle(table, null, request, response);
 		}
 	}
 

@@ -9,28 +9,33 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Column;
 
 public class RowWrapper {
+	/** null for "new" rows */
 	protected final Record record;
 	protected final String table;
 	protected final Router router;
 	protected final Catalog catalog;
+	/** non-null for new rows" */
+	protected final String newFormId;
 
-	public RowWrapper(Router router, Catalog catalog, String table, Record record) {
+	public RowWrapper(Router router, Catalog catalog, String table, Record record, String newFormId) {
 		this.router = router;
 		this.catalog = catalog;
 		this.table = table;
 		this.record = record;
+		this.newFormId = newFormId;
 	}
 
 	public String getAsString() {
 		return (String) record.getValue("_as_string");
 	}
 
+	/** @return null for "new" rows */
 	public String getId() {
-		return (String) record.getValue("_id");
+		return record == null ? null : (String) record.getValue("_id");
 	}
 
 	public String getLink() {
-		return router.getDetailRoute(table, getId());
+		return record == null ? router.getNewRoute(table) : router.getDetailRoute(table, getId());
 	}
 
 	public List<ColumnWrapper> getColumns() {
@@ -53,12 +58,13 @@ public class RowWrapper {
 			return column.getName();
 		}
 
+		/** @return null for new rows */
 		public Object getValue() {
-			return record.getValue(getName());
+			return record == null ? null : record.getValue(getName());
 		}
 
 		public String getFormInputName() {
-			return router.getFormInputName(table, getId(), getName());
+			return router.getFormInputName(table, getId(), getName(), newFormId);
 		}
 	}
 }

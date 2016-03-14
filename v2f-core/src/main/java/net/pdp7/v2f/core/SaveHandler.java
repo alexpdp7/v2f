@@ -27,15 +27,29 @@ public class SaveHandler {
 		request.getParameterMap().entrySet().stream()
 				.filter(e -> Router.FormInputName.booleanIsFormInputName(e.getKey()))
 				.map(FormValue::new)
-				.collect(Collectors.groupingBy(FormValue::getTableAndId))
+				.collect(Collectors.groupingBy(FormValue::getTableAndIds))
 				.entrySet().stream()
 				.forEach(e -> save(e.getKey(), e.getValue()));
 	}
 
-	protected void save(TableAndId tableAndId, List<FormValue> list) {
-		dslContext.update(table(tableAndId.table))
+	protected void save(TableAndIds tableAndIds, List<FormValue> list) {
+		if (tableAndIds.id == null) {
+			insert(tableAndIds, list);
+		} else {
+			update(tableAndIds, list);
+		}
+	}
+
+	protected void insert(TableAndIds tableAndIds, List<FormValue> list) {
+		dslContext.insertInto(table(tableAndIds.table))
 				.set(list.stream().collect(Collectors.toMap(fv -> field(fv.formInputName.column), fv -> fv.value)))
-				.where(field("_id").equal(tableAndId.id))
+				.execute();
+	}
+
+	protected void update(TableAndIds tableAndIds, List<FormValue> list) {
+		dslContext.update(table(tableAndIds.table))
+				.set(list.stream().collect(Collectors.toMap(fv -> field(fv.formInputName.column), fv -> fv.value)))
+				.where(field("_id").equal(tableAndIds.id))
 				.execute();
 	}
 
@@ -44,37 +58,40 @@ public class SaveHandler {
 		public final String value;
 
 		protected FormValue(Map.Entry<String, String[]> entry) {
-
 			formInputName = new Router.FormInputName(entry.getKey());
 			value = entry.getValue()[0];
 		}
 
-		public TableAndId getTableAndId() {
-			return new TableAndId(formInputName.table, formInputName.id);
+		public TableAndIds getTableAndIds() {
+			return new TableAndIds(formInputName.table, formInputName.id, formInputName.newFormId);
 		}
 	}
 
-	protected static class TableAndId {
+	protected static class TableAndIds {
 		public final String table;
 		public final String id;
+		public final String newFormId;
 
-		protected TableAndId(String table, String id) {
+		protected TableAndIds(String table, String id, String newFormId) {
 			this.table = table;
 			this.id = id;
+			this.newFormId = newFormId;
 		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(table, id);
+			return Objects.hash(table, id, newFormId);
 		}
 
 		@Override
 		public boolean equals(Object obj) {
-			if (!(obj instanceof TableAndId)) {
+			if (!(obj instanceof TableAndIds)) {
 				return false;
 			}
-			TableAndId other = (TableAndId) obj;
-			return table.equals(other.table) && id.equals(other.id);
+			TableAndIds other = (TableAndIds) obj;
+			return Objects.equals(table, other.table)
+					&& Objects.equals(id, other.id)
+					&& Objects.equals(newFormId, other.newFormId);
 		}
 	}
 
