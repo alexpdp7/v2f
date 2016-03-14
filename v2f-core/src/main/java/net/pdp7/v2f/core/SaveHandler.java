@@ -49,7 +49,7 @@ public class SaveHandler {
 	protected void update(TableAndIds tableAndIds, List<FormValue> list) {
 		dslContext.update(table(tableAndIds.table))
 				.set(list.stream().collect(Collectors.toMap(fv -> field(fv.formInputName.column), fv -> fv.value)))
-				.where(field("_id").equal(tableAndIds.id))
+				.where(field("_id").cast(String.class).equal(tableAndIds.id))
 				.execute();
 	}
 

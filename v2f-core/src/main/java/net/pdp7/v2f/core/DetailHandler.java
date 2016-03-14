@@ -56,7 +56,7 @@ public class DetailHandler {
 		Record record = dslContext
 				.select()
 				.from(table)
-				.where(field("_id").equal(id))
+				.where(field("_id").cast(String.class).equal(id))
 				.fetchOne();
 		if (record == null) {
 			throw new RuntimeException("could not load record with id " + id);

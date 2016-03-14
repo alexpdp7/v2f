@@ -31,7 +31,7 @@ public class RowWrapper {
 
 	/** @return null for "new" rows */
 	public String getId() {
-		return record == null ? null : (String) record.getValue("_id");
+		return record == null ? null : record.getValue("_id").toString();
 	}
 
 	public String getLink() {
