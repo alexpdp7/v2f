@@ -3,6 +3,7 @@ package net.pdp7.v2f.core;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -23,13 +24,14 @@ public class SaveHandler {
 		this.dslContext = dslContext;
 	}
 
-	public void handle(HttpServletRequest request, HttpServletResponse response) {
+	public void handle(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		request.getParameterMap().entrySet().stream()
 				.filter(e -> Router.FormInputName.booleanIsFormInputName(e.getKey()))
 				.map(FormValue::new)
 				.collect(Collectors.groupingBy(FormValue::getTableAndIds))
 				.entrySet().stream()
 				.forEach(e -> save(e.getKey(), e.getValue()));
+		response.sendRedirect(request.getParameter("success_url"));
 	}
 
 	protected void save(TableAndIds tableAndIds, List<FormValue> list) {

@@ -45,6 +45,10 @@ public class Router {
 		findRoute(request.getPathInfo()).execute(request, response);
 	}
 
+	public String getListTableRoute(String table) {
+		return new ListTableRoute(table).getPath();
+	}
+
 	public String getDetailRoute(String table, String id) {
 		return new DetailRoute(table, id).getPath();
 	}
@@ -93,6 +97,10 @@ public class Router {
 
 		protected ListTableRoute(String table) {
 			this.table = table;
+		}
+
+		public String getPath() {
+			return "/" + table + "/";
 		}
 
 		@Override

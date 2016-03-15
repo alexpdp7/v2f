@@ -3,6 +3,7 @@
 		[[${column.name}]]
 		<input type="text" th:name="${column.formInputName}" th:value="${column.value}"/>
 	</label>
+	<input type="hidden" name="success_url" th:value="${success_url}"/>
 	<input type="submit" name="action" value="save"/>
 </form>
 
