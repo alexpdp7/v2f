@@ -11,6 +11,7 @@ import com.google.common.net.UrlEscapers;
 
 public class Router {
 
+	public static final Pattern INDEX_PATTERN = Pattern.compile("^/$");
 	public static final Pattern LIST_TABLE_PATTERN = Pattern.compile("^/([^/]*)/$");
 	public static final Pattern DETAIL_TABLE_PATTERN = Pattern.compile("^/([^/]*)/detail/([^/]*)/$");
 	public static final Pattern NEW_TABLE_PATTERN = Pattern.compile("^/([^/]*)/new/$");
@@ -18,13 +19,19 @@ public class Router {
 
 	protected final ListHandler listHandler;
 	protected final DetailHandler detailHandler;
+	protected final IndexHandler indexHandler;
 
-	public Router(ListHandler listHandler, DetailHandler detailHandler) {
+	public Router(ListHandler listHandler, DetailHandler detailHandler, IndexHandler indexHandler) {
 		this.listHandler = listHandler;
 		this.detailHandler = detailHandler;
+		this.indexHandler = indexHandler;
 	}
 
 	protected Route findRoute(String pathInfo) throws RouteNotFoundException {
+		Matcher indexMatcher = INDEX_PATTERN.matcher(pathInfo);
+		if (indexMatcher.matches()) {
+			return new IndexRoute();
+		}
 		Matcher tableMatcher = LIST_TABLE_PATTERN.matcher(pathInfo);
 		if (tableMatcher.matches()) {
 			return new ListTableRoute(tableMatcher.group(1));
@@ -90,6 +97,21 @@ public class Router {
 
 	protected abstract class Route {
 		protected abstract void execute(HttpServletRequest request, HttpServletResponse response) throws IOException;
+	}
+
+	protected class IndexRoute extends Route {
+
+		protected IndexRoute() {
+		}
+
+		public String getPath() {
+			return "/";
+		}
+
+		@Override
+		protected void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
+			indexHandler.handle(request, response);
+		}
 	}
 
 	protected class ListTableRoute extends Route {

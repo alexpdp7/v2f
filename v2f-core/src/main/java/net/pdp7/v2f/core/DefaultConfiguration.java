@@ -20,7 +20,12 @@ public class DefaultConfiguration {
 
 	@Bean
 	public Router router() {
-		return new Router(listHandler(), detailHandler());
+		return new Router(listHandler(), detailHandler(), indexHandler());
+	}
+
+	@Bean
+	public IndexHandler indexHandler() {
+		return new IndexHandler(viewResolver, localeResolver(), catalog());
 	}
 
 	@Bean
@@ -47,6 +52,7 @@ public class DefaultConfiguration {
 	public Object dummyCircular() {
 		listHandler().setRouter(router());
 		detailHandler().setRouter(router());
+		indexHandler().setRouter(router());
 		return new Object();
 	}
 
