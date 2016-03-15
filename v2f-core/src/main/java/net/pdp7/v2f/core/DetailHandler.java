@@ -44,7 +44,7 @@ public class DetailHandler {
 					table,
 					id == null ? null : loadRecord(table, id),
 					id == null ? "0" : null);
-			ImmutableMap<String, ?> model = new ImmutableMap.Builder<String,Object>()
+			ImmutableMap<String, ?> model = new ImmutableMap.Builder<String, Object>()
 					.put("row", row)
 					.put("success_url", router.getListTableRoute(table))
 					.build();
