@@ -54,6 +54,7 @@ public class DefaultConfiguration {
 	public Catalog catalog() {
 		try {
 			SchemaCrawlerOptions options = new SchemaCrawlerOptions();
+			// FIXME: configurable schema
 			options.setSchemaInclusionRule(s -> s.equals("v2f"));
 			return SchemaCrawlerUtility.getCatalog(dataSource.getConnection(), options);
 		} catch (SchemaCrawlerException | SQLException e) {
