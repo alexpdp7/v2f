@@ -1,34 +1,27 @@
 package net.pdp7.v2f.core;
 
-import static org.jooq.impl.DSL.field;
-
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
 import com.google.common.collect.ImmutableMap;
 
-import schemacrawler.schema.Catalog;
-
 public class ListHandler {
 
-	protected final DSLContext dslContext;
+	protected final DAO dao;
 	protected final ThymeleafViewResolver viewResolver;
 	protected final LocaleResolver localeResolver;
-	protected final Catalog catalog;
 	protected Router router;
 
-	public ListHandler(DSLContext dslContext, ThymeleafViewResolver viewResolver, LocaleResolver localeResolver, Catalog catalog) {
-		this.dslContext = dslContext;
+	public ListHandler(DAO dao, ThymeleafViewResolver viewResolver, LocaleResolver localeResolver) {
+		this.dao = dao;
 		this.viewResolver = viewResolver;
 		this.localeResolver = localeResolver;
-		this.catalog = catalog;
 	}
 
 	public void setRouter(Router router) {
@@ -38,10 +31,8 @@ public class ListHandler {
 	public void handle(String table, HttpServletRequest request, HttpServletResponse response)
 			throws DataAccessException {
 		try {
-			List<RowWrapper> rows = dslContext
-					.select(field("_id"), field("_as_string"))
-					.from(table)
-					.fetch(record -> new RowWrapper(router, catalog, table, record, null));
+			List<RowWrapper> rows = dao.getList(table)
+					.fetch(record -> new RowWrapper(router, dao.catalog, table, record, null));
 			Map<String, ?> model = new ImmutableMap.Builder<String, Object>()
 					.put("rows", rows)
 					.put("new_url", router.getNewRoute(table))

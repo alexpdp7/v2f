@@ -1,7 +1,6 @@
 package net.pdp7.v2f.core;
 
 import static org.jooq.impl.DSL.field;
-import static org.jooq.impl.DSL.table;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,16 +11,16 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jooq.DSLContext;
+import org.jooq.Field;
 
 import net.pdp7.v2f.core.Router.FormInputName;
 
 public class SaveHandler {
 
-	protected final DSLContext dslContext;
+	protected final DAO dao;
 
-	public SaveHandler(DSLContext dslContext) {
-		this.dslContext = dslContext;
+	public SaveHandler(DAO dao) {
+		this.dao = dao;
 	}
 
 	public void handle(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -35,24 +34,15 @@ public class SaveHandler {
 	}
 
 	protected void save(TableAndIds tableAndIds, List<FormValue> list) {
+		String table = tableAndIds.table;
+		Map<Field<Object>, String> fields = list
+				.stream()
+				.collect(Collectors.toMap(fv -> field(fv.formInputName.column), fv -> fv.value));
 		if (tableAndIds.id == null) {
-			insert(tableAndIds, list);
+			dao.insert(table, fields);
 		} else {
-			update(tableAndIds, list);
+			dao.update(table, fields, tableAndIds.id);
 		}
-	}
-
-	protected void insert(TableAndIds tableAndIds, List<FormValue> list) {
-		dslContext.insertInto(table(tableAndIds.table))
-				.set(list.stream().collect(Collectors.toMap(fv -> field(fv.formInputName.column), fv -> fv.value)))
-				.execute();
-	}
-
-	protected void update(TableAndIds tableAndIds, List<FormValue> list) {
-		dslContext.update(table(tableAndIds.table))
-				.set(list.stream().collect(Collectors.toMap(fv -> field(fv.formInputName.column), fv -> fv.value)))
-				.where(field("_id").cast(String.class).equal(tableAndIds.id))
-				.execute();
 	}
 
 	protected static class FormValue {

@@ -10,25 +10,22 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
 import com.google.common.collect.ImmutableMap;
 
-import schemacrawler.schema.Catalog;
-
 public class IndexHandler {
 
 	protected final ThymeleafViewResolver viewResolver;
 	protected final LocaleResolver localeResolver;
-	protected final Catalog catalog;
+	protected final DAO dao;
 	protected Router router;
 
-	public IndexHandler(ThymeleafViewResolver viewResolver, LocaleResolver localeResolver, Catalog catalog) {
+	public IndexHandler(ThymeleafViewResolver viewResolver, LocaleResolver localeResolver, DAO dao) {
 		this.viewResolver = viewResolver;
 		this.localeResolver = localeResolver;
-		this.catalog = catalog;
+		this.dao = dao;
 	}
 
 	public void handle(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			Map<String, String> tablesToRoutes = catalog
-					.getTables()
+			Map<String, String> tablesToRoutes = dao.getTables()
 					.stream()
 					.map(t -> t.getName())
 					.collect(Collectors.toMap(s -> s, s -> router.getListTableRoute(s)));

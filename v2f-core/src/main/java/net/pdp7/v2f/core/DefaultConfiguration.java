@@ -24,23 +24,28 @@ public class DefaultConfiguration {
 	}
 
 	@Bean
+	public DAO dao() {
+		return new DAO(dslContext, catalog());
+	}
+
+	@Bean
 	public IndexHandler indexHandler() {
-		return new IndexHandler(viewResolver, localeResolver(), catalog());
+		return new IndexHandler(viewResolver, localeResolver(), dao());
 	}
 
 	@Bean
 	public ListHandler listHandler() {
-		return new ListHandler(dslContext, viewResolver, localeResolver(), catalog());
+		return new ListHandler(dao(), viewResolver, localeResolver());
 	}
 
 	@Bean
 	public DetailHandler detailHandler() {
-		return new DetailHandler(dslContext, viewResolver, localeResolver(), catalog());
+		return new DetailHandler(dao(), viewResolver, localeResolver(), catalog());
 	}
 
 	@Bean
 	public SaveHandler saveHandler() {
-		return new SaveHandler(dslContext);
+		return new SaveHandler(dao());
 	}
 
 	@Bean
