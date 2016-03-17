@@ -1,4 +1,4 @@
-package net.pdp7.v2f.core;
+package net.pdp7.v2f.core.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

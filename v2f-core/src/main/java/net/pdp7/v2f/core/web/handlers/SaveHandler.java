@@ -1,4 +1,4 @@
-package net.pdp7.v2f.core;
+package net.pdp7.v2f.core.web.handlers;
 
 import static org.jooq.impl.DSL.field;
 
@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jooq.Field;
 
-import net.pdp7.v2f.core.Router.FormInputName;
+import net.pdp7.v2f.core.dao.DAO;
+import net.pdp7.v2f.core.web.Router;
+import net.pdp7.v2f.core.web.Router.FormInputName;
 
 public class SaveHandler {
 

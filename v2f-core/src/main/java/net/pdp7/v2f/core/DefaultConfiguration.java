@@ -11,6 +11,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
+import net.pdp7.v2f.core.dao.DAO;
+import net.pdp7.v2f.core.web.Router;
+import net.pdp7.v2f.core.web.ViewRenderer;
+import net.pdp7.v2f.core.web.handlers.DetailHandler;
+import net.pdp7.v2f.core.web.handlers.IndexHandler;
+import net.pdp7.v2f.core.web.handlers.ListHandler;
+import net.pdp7.v2f.core.web.handlers.SaveHandler;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.SchemaCrawlerException;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;

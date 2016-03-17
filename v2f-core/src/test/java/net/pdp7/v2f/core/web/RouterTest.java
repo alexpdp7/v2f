@@ -1,7 +1,8 @@
-package net.pdp7.v2f.core;
+package net.pdp7.v2f.core.web;
 
 import junit.framework.TestCase;
-import net.pdp7.v2f.core.Router.ListTableRoute;
+import net.pdp7.v2f.core.web.Router;
+import net.pdp7.v2f.core.web.Router.ListTableRoute;
 
 public class RouterTest extends TestCase {
 

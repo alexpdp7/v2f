@@ -1,4 +1,4 @@
-package net.pdp7.v2f.core;
+package net.pdp7.v2f.core.web;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -8,6 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.net.UrlEscapers;
+
+import net.pdp7.v2f.core.web.handlers.DetailHandler;
+import net.pdp7.v2f.core.web.handlers.IndexHandler;
+import net.pdp7.v2f.core.web.handlers.ListHandler;
 
 public class Router {
 

@@ -1,4 +1,4 @@
-package net.pdp7.v2f.core;
+package net.pdp7.v2f.core.dao;
 
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
@@ -11,13 +11,14 @@ import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.Record;
 
+import net.pdp7.v2f.core.web.Router;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Table;
 
 public class DAO {
 
 	protected final DSLContext dslContext;
-	protected final Catalog catalog;
+	public final Catalog catalog;
 	protected Router router;
 
 	public DAO(DSLContext dslContext, Catalog catalog) {
