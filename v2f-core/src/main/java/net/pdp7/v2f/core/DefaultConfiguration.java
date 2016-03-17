@@ -29,18 +29,23 @@ public class DefaultConfiguration {
 	}
 
 	@Bean
+	public ViewRenderer viewRenderer() {
+		return new ViewRenderer(viewResolver, localeResolver());
+	}
+
+	@Bean
 	public IndexHandler indexHandler() {
-		return new IndexHandler(viewResolver, localeResolver(), dao());
+		return new IndexHandler(dao(), viewRenderer());
 	}
 
 	@Bean
 	public ListHandler listHandler() {
-		return new ListHandler(dao(), viewResolver, localeResolver());
+		return new ListHandler(dao(), viewRenderer());
 	}
 
 	@Bean
 	public DetailHandler detailHandler() {
-		return new DetailHandler(dao(), viewResolver, localeResolver(), catalog());
+		return new DetailHandler(dao(), viewRenderer());
 	}
 
 	@Bean
