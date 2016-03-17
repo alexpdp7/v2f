@@ -9,7 +9,6 @@
 	</parent>
 	<artifactId>v2f-core</artifactId>
 	<name>v2f-core</name>
-	<version>master</version>
 
 	<dependencies>
 		<dependency>
