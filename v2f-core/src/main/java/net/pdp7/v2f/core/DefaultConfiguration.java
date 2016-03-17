@@ -8,6 +8,7 @@ import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
 import schemacrawler.schema.Catalog;
@@ -30,7 +31,7 @@ public class DefaultConfiguration {
 
 	@Bean
 	public ViewRenderer viewRenderer() {
-		return new ViewRenderer(viewResolver, localeResolver());
+		return new ViewRenderer(viewResolver, new FixedLocaleResolver());
 	}
 
 	@Bean
@@ -51,11 +52,6 @@ public class DefaultConfiguration {
 	@Bean
 	public SaveHandler saveHandler() {
 		return new SaveHandler(dao());
-	}
-
-	@Bean
-	public LocaleResolver localeResolver() {
-		return new LocaleResolver();
 	}
 
 	@Bean
@@ -80,11 +76,11 @@ public class DefaultConfiguration {
 	}
 
 	@Autowired
-	protected DataSource dataSource;
+	public DataSource dataSource;
 
 	@Autowired
-	protected DSLContext dslContext;
+	public DSLContext dslContext;
 
 	@Autowired
-	protected ThymeleafViewResolver viewResolver;
+	public ThymeleafViewResolver viewResolver;
 }
