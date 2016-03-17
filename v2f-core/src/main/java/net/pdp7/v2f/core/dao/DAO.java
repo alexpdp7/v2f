@@ -14,24 +14,34 @@ import org.jooq.Record;
 import net.pdp7.v2f.core.web.Router;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Table;
+import schemacrawler.schemacrawler.SchemaCrawlerOptions;
+import schemacrawler.utility.SchemaCrawlerUtility;
 
 public class DAO {
 
 	protected final DSLContext dslContext;
-	public final Catalog catalog;
+	protected final SchemaCrawlerOptions schemaCrawlerOptions;
 	protected Router router;
+	public final String v2fSchema;
 
-	public DAO(DSLContext dslContext, Catalog catalog) {
+	public DAO(DSLContext dslContext, SchemaCrawlerOptions schemaCrawlerOptions, String v2fSchema) {
 		this.dslContext = dslContext;
-		this.catalog = catalog;
+		this.schemaCrawlerOptions = schemaCrawlerOptions;
+		this.v2fSchema = v2fSchema;
 	}
 
 	public void setRouter(Router router) {
 		this.router = router;
 	}
 
+	public Catalog getCatalog() {
+		// This should be cached, however note that this method should be careful
+		// so that it does not execute until the database has been setup!
+		return (Catalog) dslContext.connectionResult(connection -> SchemaCrawlerUtility.getCatalog(connection, schemaCrawlerOptions));
+	}
+
 	public List<Table> getTables() {
-		return catalog
+		return getCatalog()
 				.getTables()
 				.stream()
 				.filter(this::isViewableView)
@@ -89,6 +99,6 @@ public class DAO {
 		return dslContext
 				.select(field("_id"), field("_as_string"))
 				.from(table)
-				.fetch(record -> new RowWrapper(router, catalog, table, record, null));
+				.fetch(record -> new RowWrapper(router, getCatalog(), table, record, null, v2fSchema));
 	}
 }

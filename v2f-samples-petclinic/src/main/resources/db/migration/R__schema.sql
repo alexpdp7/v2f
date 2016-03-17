@@ -1,3 +1,11 @@
+drop schema if exists petclinic cascade;
+drop schema if exists v2f_samples_petclinic cascade;
+
+create schema petclinic;
+create schema v2f_samples_petclinic;
+
+set search_path to petclinic;
+
 create extension if not exists btree_gist;
 
 create table species (
@@ -5,14 +13,14 @@ create table species (
   name                       text not null
 );
 
-create or replace function species_auto_id() returns trigger as $species_auto_id$
+create or replace function species_auto_id() returns trigger as $$
   begin
     if new.species_id is null then
       new.species_id = lower(left(new.name, 100));
     end if;
     return new;
   end;
-$species_auto_id$ language plpgsql;
+$$ language plpgsql;
 
 drop trigger if exists species_auto_id on species;
 create trigger species_auto_id before insert on species for each row execute procedure species_auto_id();
@@ -45,3 +53,23 @@ create table visits (
   notes                      text,
   exclude using gist (vet_id with =, during with &&)
 );
+
+set search_path to v2f_samples_petclinic, petclinic;
+
+create or replace view species as
+  select species_id as _id,
+         name as _as_string,
+         name
+  from   petclinic.species;
+
+create or replace view owners as
+  select owner_id as _id,
+         name as _as_string,
+         name,
+         contact_information,
+         email_address
+  from   petclinic.owners;
+
+set search_path to petclinic;
+
+insert into species(name) values ('Cat'), ('Dog'), ('Iguana'), ('Lizard');

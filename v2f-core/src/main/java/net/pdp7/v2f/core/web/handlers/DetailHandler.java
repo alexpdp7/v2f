@@ -31,10 +31,11 @@ public class DetailHandler {
 	public void handle(String table, String id, HttpServletRequest request, HttpServletResponse response) {
 		RowWrapper row = new RowWrapper(
 				router,
-				dao.catalog,
+				dao.getCatalog(),
 				table,
 				id == null ? null : dao.loadRecord(table, id),
-				id == null ? "0" : null);
+				id == null ? "0" : null,
+				dao.v2fSchema);
 		ImmutableMap<String, ?> model = new ImmutableMap.Builder<String, Object>()
 				.put("row", row)
 				.put("success_url", router.getListTableRoute(table))

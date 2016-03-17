@@ -1,11 +1,10 @@
 package net.pdp7.v2f.core;
 
-import java.sql.SQLException;
-
 import javax.sql.DataSource;
 
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
@@ -18,10 +17,7 @@ import net.pdp7.v2f.core.web.handlers.DetailHandler;
 import net.pdp7.v2f.core.web.handlers.IndexHandler;
 import net.pdp7.v2f.core.web.handlers.ListHandler;
 import net.pdp7.v2f.core.web.handlers.SaveHandler;
-import schemacrawler.schema.Catalog;
-import schemacrawler.schemacrawler.SchemaCrawlerException;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
-import schemacrawler.utility.SchemaCrawlerUtility;
 
 @Configuration
 public class DefaultConfiguration {
@@ -33,7 +29,7 @@ public class DefaultConfiguration {
 
 	@Bean
 	public DAO dao() {
-		return new DAO(dslContext, catalog());
+		return new DAO(dslContext, schemaCrawlerOptions(), v2fSchema);
 	}
 
 	@Bean
@@ -70,16 +66,14 @@ public class DefaultConfiguration {
 		return new Object();
 	}
 
+	@Value("${v2f.schema}")
+	public String v2fSchema;
+
 	@Bean
-	public Catalog catalog() {
-		try {
-			SchemaCrawlerOptions options = new SchemaCrawlerOptions();
-			// FIXME: configurable schema
-			options.setSchemaInclusionRule(s -> s.equals("v2f"));
-			return SchemaCrawlerUtility.getCatalog(dataSource.getConnection(), options);
-		} catch (SchemaCrawlerException | SQLException e) {
-			throw new RuntimeException(e);
-		}
+	public SchemaCrawlerOptions schemaCrawlerOptions() {
+		SchemaCrawlerOptions options = new SchemaCrawlerOptions();
+		options.setSchemaInclusionRule(s -> s.equals(v2fSchema));
+		return options;
 	}
 
 	@Autowired

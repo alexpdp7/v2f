@@ -17,13 +17,15 @@ public class RowWrapper {
 	protected final Catalog catalog;
 	/** non-null for new rows" */
 	protected final String newFormId;
+	protected final String v2fSchema;
 
-	public RowWrapper(Router router, Catalog catalog, String table, Record record, String newFormId) {
+	public RowWrapper(Router router, Catalog catalog, String table, Record record, String newFormId, String v2fSchema) {
 		this.router = router;
 		this.catalog = catalog;
 		this.table = table;
 		this.record = record;
 		this.newFormId = newFormId;
+		this.v2fSchema = v2fSchema;
 	}
 
 	public String getAsString() {
@@ -40,7 +42,7 @@ public class RowWrapper {
 	}
 
 	public List<ColumnWrapper> getColumns() {
-		return catalog.lookupTable(catalog.lookupSchema("v2f").get(), table).get()
+		return catalog.lookupTable(catalog.lookupSchema(v2fSchema).get(), table).get()
 				.getColumns().stream()
 				.filter(c -> !c.getName().startsWith("_"))
 				.map(column -> new ColumnWrapper(column))
