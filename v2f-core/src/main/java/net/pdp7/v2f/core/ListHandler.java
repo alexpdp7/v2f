@@ -26,8 +26,7 @@ public class ListHandler {
 
 	public void handle(String table, HttpServletRequest request, HttpServletResponse response)
 			throws DataAccessException {
-		List<RowWrapper> rows = dao.getList(table)
-				.fetch(record -> new RowWrapper(router, dao.catalog, table, record, null));
+		List<RowWrapper> rows = dao.getList(table);
 		ImmutableMap<String, ?> model = new ImmutableMap.Builder<String, Object>()
 				.put("rows", rows)
 				.put("new_url", router.getNewRoute(table))

@@ -63,6 +63,7 @@ public class DefaultConfiguration {
 		listHandler().setRouter(router());
 		detailHandler().setRouter(router());
 		indexHandler().setRouter(router());
+		dao().setRouter(router());
 		return new Object();
 	}
 

@@ -4,13 +4,12 @@ import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.Record;
-import org.jooq.Record2;
-import org.jooq.SelectJoinStep;
 
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Table;
@@ -19,10 +18,15 @@ public class DAO {
 
 	protected final DSLContext dslContext;
 	protected final Catalog catalog;
+	protected Router router;
 
 	public DAO(DSLContext dslContext, Catalog catalog) {
 		this.dslContext = dslContext;
 		this.catalog = catalog;
+	}
+
+	public void setRouter(Router router) {
+		this.router = router;
 	}
 
 	public Collection<Table> getTables() {
@@ -54,9 +58,10 @@ public class DAO {
 				.execute();
 	}
 
-	public SelectJoinStep<Record2<Object, Object>> getList(String table) {
+	public List<RowWrapper> getList(String table) {
 		return dslContext
 				.select(field("_id"), field("_as_string"))
-				.from(table);
+				.from(table)
+				.fetch(record -> new RowWrapper(router, catalog, table, record, null));
 	}
 }
