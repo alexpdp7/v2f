@@ -3,9 +3,9 @@ package net.pdp7.v2f.core;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.jooq.DSLContext;
 import org.jooq.Field;
@@ -29,11 +29,34 @@ public class DAO {
 		this.router = router;
 	}
 
-	public Collection<Table> getTables() {
-		return catalog.getTables();
+	public List<Table> getTables() {
+		return catalog
+				.getTables()
+				.stream()
+				.filter(this::isViewableView)
+				.collect(Collectors.toList());
+	}
+
+	protected boolean isViewableView(Table table) {
+		return isViewableView(table.getName());
+	}
+
+	protected boolean isViewableView(String tableName) {
+		return !tableName.startsWith("_");
+	}
+
+	protected void assertViewableView(Table table) {
+		assertViewableView(table.getName());
+	}
+
+	protected void assertViewableView(String tableName) {
+		if (!isViewableView(tableName)) {
+			throw new RuntimeException("table " + tableName + " is not viewable");
+		}
 	}
 
 	public Record loadRecord(String table, String id) {
+		assertViewableView(table);
 		Record record = dslContext
 				.select()
 				.from(table)
@@ -46,12 +69,14 @@ public class DAO {
 	}
 
 	public void insert(String table, Map<Field<Object>, String> fields) {
+		assertViewableView(table);
 		dslContext.insertInto(table(table))
 				.set(fields)
 				.execute();
 	}
 
 	public void update(String table, Map<Field<Object>, String> fields, String id) {
+		assertViewableView(table);
 		dslContext.update(table(table))
 				.set(fields)
 				.where(field("_id").cast(String.class).equal(id))
@@ -59,6 +84,7 @@ public class DAO {
 	}
 
 	public List<RowWrapper> getList(String table) {
+		assertViewableView(table);
 		return dslContext
 				.select(field("_id"), field("_as_string"))
 				.from(table)

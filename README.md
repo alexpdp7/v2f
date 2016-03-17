@@ -6,7 +6,7 @@ v2f connects to a schema specially designed for it. The schema should *only* con
 
 ## Master-detail views
 
-Views not prefixed by `_` (TODO: filter) get a master-detail pair of views at `/tablename/` and `/tablename/id`.
+Views not prefixed by `_` get a master-detail pair of views at `/tablename/` and `/tablename/id`.
 
 Column names of master-detail views *must not* start with `_` except in the special cases noted below. The `_*` namespace is reserved for further expansion of the framework.
 
