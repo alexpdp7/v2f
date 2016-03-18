@@ -29,6 +29,7 @@ public class DetailHandler {
 	 * @param id is null for "new" rows
 	 */
 	public void handle(String table, String id, HttpServletRequest request, HttpServletResponse response) {
+		assert router != null : this + " router not configured";
 		RowWrapper row = new RowWrapper(
 				router,
 				dao.getCatalog(),
