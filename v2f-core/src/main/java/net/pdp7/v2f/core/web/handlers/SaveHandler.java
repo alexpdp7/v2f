@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.jooq.Field;
 
 import net.pdp7.v2f.core.dao.DAO;
+import net.pdp7.v2f.core.utils.ServletUtils;
 import net.pdp7.v2f.core.web.Router;
 import net.pdp7.v2f.core.web.Router.FormInputName;
 
@@ -32,7 +33,7 @@ public class SaveHandler {
 				.collect(Collectors.groupingBy(FormValue::getTableAndIds))
 				.entrySet().stream()
 				.forEach(e -> save(e.getKey(), e.getValue()));
-		response.sendRedirect(request.getParameter("success_url"));
+		ServletUtils.redirect(response, request.getParameter("success_url"));
 	}
 
 	protected void save(TableAndIds tableAndIds, List<FormValue> list) {

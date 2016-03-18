@@ -24,6 +24,7 @@ public class IndexHandler {
 	}
 
 	public void handle(HttpServletRequest request, HttpServletResponse response) {
+		assert router != null : this + " router not configured";
 		Map<String, String> tablesToRoutes = dao.getTables()
 				.stream()
 				.map(t -> t.getName())
