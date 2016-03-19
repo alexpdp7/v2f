@@ -24,8 +24,13 @@ public class ViewRenderer {
 					.resolveViewName(viewName, localeResolver.resolveLocale(request))
 					.render(model, request, response);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new ViewRenderingException(e);
 		}
 	}
 
+	public static class ViewRenderingException extends RuntimeException {
+		protected ViewRenderingException(Throwable t) {
+			super(t);
+		}
+	}
 }

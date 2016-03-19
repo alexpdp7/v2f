@@ -62,7 +62,7 @@ public class DAO {
 
 	protected void assertViewableView(String tableName) {
 		if (!isViewableView(tableName)) {
-			throw new RuntimeException("table " + tableName + " is not viewable");
+			throw new DAOException("table " + tableName + " is not viewable");
 		}
 	}
 
@@ -74,7 +74,7 @@ public class DAO {
 				.where(field("_id").cast(String.class).equal(id))
 				.fetchOne();
 		if (record == null) {
-			throw new RuntimeException("could not load record with id " + id);
+			throw new DAOException("could not load record with id " + id);
 		}
 		return record;
 	}
@@ -100,5 +100,12 @@ public class DAO {
 				.select(field("_id"), field("_as_string"))
 				.from(table)
 				.fetch(record -> new RowWrapper(router, getCatalog(), table, record, null, v2fSchema));
+	}
+
+	public static class DAOException extends RuntimeException {
+
+		protected DAOException(String message) {
+			super(message);
+		}
 	}
 }
