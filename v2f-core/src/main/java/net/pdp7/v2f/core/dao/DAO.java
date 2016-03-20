@@ -12,6 +12,7 @@ import org.jooq.Field;
 import org.jooq.Record;
 
 import net.pdp7.v2f.core.web.Router;
+import net.pdp7.v2f.core.web.WidgetPolicy;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
@@ -20,12 +21,14 @@ import schemacrawler.utility.SchemaCrawlerUtility;
 public class DAO {
 
 	protected final DSLContext dslContext;
+	protected final WidgetPolicy widgetPolicy;
 	protected final SchemaCrawlerOptions schemaCrawlerOptions;
 	protected Router router;
 	public final String v2fSchema;
 
-	public DAO(DSLContext dslContext, SchemaCrawlerOptions schemaCrawlerOptions, String v2fSchema) {
+	public DAO(DSLContext dslContext, WidgetPolicy widgetPolicy, SchemaCrawlerOptions schemaCrawlerOptions, String v2fSchema) {
 		this.dslContext = dslContext;
+		this.widgetPolicy = widgetPolicy;
 		this.schemaCrawlerOptions = schemaCrawlerOptions;
 		this.v2fSchema = v2fSchema;
 	}
@@ -99,7 +102,7 @@ public class DAO {
 		return dslContext
 				.select(field("_id"), field("_as_string"))
 				.from(table)
-				.fetch(record -> new RowWrapper(router, getCatalog(), table, record, null, v2fSchema));
+				.fetch(record -> new RowWrapper(router, getCatalog(), widgetPolicy, table, record, null, v2fSchema));
 	}
 
 	public static class DAOException extends RuntimeException {
