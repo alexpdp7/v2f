@@ -13,6 +13,7 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import net.pdp7.v2f.core.dao.DAO;
 import net.pdp7.v2f.core.web.Router;
 import net.pdp7.v2f.core.web.ViewRenderer;
+import net.pdp7.v2f.core.web.WidgetPolicy;
 import net.pdp7.v2f.core.web.handlers.DetailHandler;
 import net.pdp7.v2f.core.web.handlers.IndexHandler;
 import net.pdp7.v2f.core.web.handlers.ListHandler;
@@ -28,8 +29,13 @@ public class DefaultConfiguration {
 	}
 
 	@Bean
+	public WidgetPolicy widgetPolicy() {
+		return new WidgetPolicy(1000);
+	}
+
+	@Bean
 	public DAO dao() {
-		return new DAO(dslContext, schemaCrawlerOptions(), v2fSchema);
+		return new DAO(dslContext, widgetPolicy(), schemaCrawlerOptions(), v2fSchema);
 	}
 
 	@Bean
@@ -49,7 +55,7 @@ public class DefaultConfiguration {
 
 	@Bean
 	public DetailHandler detailHandler() {
-		return new DetailHandler(dao(), viewRenderer());
+		return new DetailHandler(dao(), viewRenderer(), widgetPolicy());
 	}
 
 	@Bean

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.jooq.Record;
 
 import net.pdp7.v2f.core.web.Router;
+import net.pdp7.v2f.core.web.WidgetPolicy;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Column;
 
@@ -15,13 +16,15 @@ public class RowWrapper {
 	protected final String table;
 	protected final Router router;
 	protected final Catalog catalog;
+	protected final WidgetPolicy widgetPolicy;
 	/** non-null for new rows" */
 	protected final String newFormId;
 	protected final String v2fSchema;
 
-	public RowWrapper(Router router, Catalog catalog, String table, Record record, String newFormId, String v2fSchema) {
+	public RowWrapper(Router router, Catalog catalog, WidgetPolicy widgetPolicy, String table, Record record, String newFormId, String v2fSchema) {
 		this.router = router;
 		this.catalog = catalog;
+		this.widgetPolicy = widgetPolicy;
 		this.table = table;
 		this.record = record;
 		this.newFormId = newFormId;
@@ -68,6 +71,10 @@ public class RowWrapper {
 
 		public String getFormInputName() {
 			return router.getFormInputName(table, getId(), getName(), newFormId);
+		}
+
+		public String getWidgetName() {
+			return "widget-" + widgetPolicy.getWidgetName(column);
 		}
 	}
 }
