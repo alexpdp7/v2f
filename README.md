@@ -20,12 +20,6 @@ Each row in the master table will link to a detail view using the `_id` field.
 
 Each master-detail view *must* have an `_as_string` column, which is used to create the default user-friendly representation of the row.
 
-### TODO: `_user_id` column
-
-Each master-detail view *can* have a `_user_id` column. If present, v2f will automatically filter by the currently logged in user.
-
-Note: this probably means that the master-detail view will be a cartesian product with some user table. v2f *must* always filter by the `_user_id` column- if it does not, report a bug.
-
 ### TODO: other columns
 
 Other column names *must not* contain `__` in their names except in the special cases noted below. The `column_name__*` namespace is reserved for further expansion of the framework.
