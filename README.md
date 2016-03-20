@@ -6,9 +6,9 @@ v2f connects to a schema specially designed for it. The schema should *only* con
 
 ## Master-detail views
 
-Views not prefixed by `_` get a master-detail pair of views at `/tablename/` and `/tablename/id`.
+Views not prefixed by `_` get a master-detail pair of views at `/tablename/` and `/tablename/detail/id` or `/tablename/new` for adding new rows.
 
-Column names of master-detail views *must not* start with `_` except in the special cases noted below. The `_*` namespace is reserved for further expansion of the framework.
+Column names of master-detail views *must not* start with `_` nor contain `__` except in the special cases noted below. The `_*` namespace is reserved for view-wide extra information (such as the `_id` and `_as_string` columns described below) and `column_name__extra` are reserved to add column-specific extra information.
 
 ### `_id` column
 
@@ -20,8 +20,6 @@ Each row in the master table will link to a detail view using the `_id` field.
 
 Each master-detail view *must* have an `_as_string` column, which is used to create the default user-friendly representation of the row.
 
-### TODO: other columns
+### Other columns
 
-Other column names *must not* contain `__` in their names except in the special cases noted below. The `column_name__*` namespace is reserved for further expansion of the framework.
-
-Except as described below, columns will be shown plainly in the master-detail views.
+All other columns will be displayed and editable in the detail view.
