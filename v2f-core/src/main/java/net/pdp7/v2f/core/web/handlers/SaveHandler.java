@@ -3,37 +3,60 @@ package net.pdp7.v2f.core.web.handlers;
 import static org.jooq.impl.DSL.field;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.http.client.utils.URIBuilder;
 import org.jooq.Field;
 
 import net.pdp7.v2f.core.dao.DAO;
 import net.pdp7.v2f.core.utils.ServletUtils;
+import net.pdp7.v2f.core.web.FormStateStore;
 import net.pdp7.v2f.core.web.Router;
 import net.pdp7.v2f.core.web.Router.FormInputName;
 
 public class SaveHandler {
 
-	protected final DAO dao;
+	public static final String FORM_STATE_PARAMETER = "form_state";
 
-	public SaveHandler(DAO dao) {
+	protected final DAO dao;
+	protected final FormStateStore formStateStore;
+
+	public SaveHandler(DAO dao, FormStateStore formStateStore) {
 		this.dao = dao;
+		this.formStateStore = formStateStore;
 	}
 
 	public void handle(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		request.getParameterMap().entrySet().stream()
-				.filter(e -> Router.FormInputName.booleanIsFormInputName(e.getKey()))
-				.map(FormValue::new)
-				.collect(Collectors.groupingBy(FormValue::getTableAndIds))
-				.entrySet().stream()
-				.forEach(e -> save(e.getKey(), e.getValue()));
-		ServletUtils.redirect(response, request.getParameter("success_url"));
+		try {
+			request.getParameterMap().entrySet().stream()
+					.filter(e -> Router.FormInputName.booleanIsFormInputName(e.getKey()))
+					.map(FormValue::new)
+					.collect(Collectors.groupingBy(FormValue::getTableAndIds))
+					.entrySet().stream()
+					.forEach(e -> save(e.getKey(), e.getValue()));
+			ServletUtils.redirect(response, request.getParameter("success_url"));
+		} catch (Exception e) {
+			Map<String, String[]> formState = new HashMap<>(request.getParameterMap());
+			formState.put("internal_error", new String[] {e.toString()});
+			UUID uuid = formStateStore.store(formState);
+			try {
+				String redirectURI = new URIBuilder(request.getPathInfo())
+						.addParameter(FORM_STATE_PARAMETER, uuid.toString())
+						.toString();
+				ServletUtils.redirect(response, redirectURI);
+			} catch (URISyntaxException e1) {
+				throw new RuntimeException("Could not parse " + request.getPathInfo(), e1);
+			}
+		}
 	}
 
 	protected void save(TableAndIds tableAndIds, List<FormValue> list) {

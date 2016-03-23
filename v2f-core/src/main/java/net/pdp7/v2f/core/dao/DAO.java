@@ -12,7 +12,6 @@ import org.jooq.Field;
 import org.jooq.Record;
 
 import net.pdp7.v2f.core.web.Router;
-import net.pdp7.v2f.core.web.WidgetPolicy;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
@@ -21,20 +20,21 @@ import schemacrawler.utility.SchemaCrawlerUtility;
 public class DAO {
 
 	protected final DSLContext dslContext;
-	protected final WidgetPolicy widgetPolicy;
+	protected RowWrapperFactory rowWrapperFactory;
 	protected final SchemaCrawlerOptions schemaCrawlerOptions;
 	protected Router router;
-	public final String v2fSchema;
 
-	public DAO(DSLContext dslContext, WidgetPolicy widgetPolicy, SchemaCrawlerOptions schemaCrawlerOptions, String v2fSchema) {
+	public DAO(DSLContext dslContext, SchemaCrawlerOptions schemaCrawlerOptions) {
 		this.dslContext = dslContext;
-		this.widgetPolicy = widgetPolicy;
 		this.schemaCrawlerOptions = schemaCrawlerOptions;
-		this.v2fSchema = v2fSchema;
 	}
 
-	public void setRouter(Router router) {
+	public void setR1outer(Router router) {
 		this.router = router;
+	}
+
+	public void setRowWrapperFactory(RowWrapperFactory rowWrapperFactory) {
+		this.rowWrapperFactory = rowWrapperFactory;
 	}
 
 	public Catalog getCatalog() {
@@ -99,10 +99,11 @@ public class DAO {
 
 	public List<RowWrapper> getList(String table) {
 		assertViewableView(table);
+		assert rowWrapperFactory != null;
 		return dslContext
 				.select(field("_id"), field("_as_string"))
 				.from(table)
-				.fetch(record -> new RowWrapper(router, getCatalog(), widgetPolicy, table, record, null, v2fSchema));
+				.fetch(record -> rowWrapperFactory.build(table, record, null, null));
 	}
 
 	public static class DAOException extends RuntimeException {
