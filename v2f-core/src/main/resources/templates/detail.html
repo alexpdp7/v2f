@@ -1,3 +1,5 @@
+<p th:text="${internal_error}"/>
+
 <form th:action="${row.link}" method="post">
 	<label th:each="column: ${row.columns}" th:inline="text">
 		[[${column.name}]]

@@ -11,6 +11,9 @@ import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
 import net.pdp7.v2f.core.dao.DAO;
+import net.pdp7.v2f.core.dao.RowWrapperFactory;
+import net.pdp7.v2f.core.web.FormStateStore;
+import net.pdp7.v2f.core.web.MemoryFormStateStore;
 import net.pdp7.v2f.core.web.Router;
 import net.pdp7.v2f.core.web.ViewRenderer;
 import net.pdp7.v2f.core.web.WidgetPolicy;
@@ -21,6 +24,7 @@ import net.pdp7.v2f.core.web.handlers.SaveHandler;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 
 @Configuration
+@SuppressWarnings("PMD.TooManyMethods")
 public class DefaultConfiguration {
 
 	@Bean
@@ -35,9 +39,19 @@ public class DefaultConfiguration {
 
 	@Bean
 	public DAO dao() {
-		return new DAO(dslContext, widgetPolicy(), schemaCrawlerOptions(), v2fSchema);
+		return new DAO(dslContext, schemaCrawlerOptions());
 	}
 
+	@Bean
+	public FormStateStore formStateStore() {
+		// This is a naive implementation, not for serious production usage
+		return new MemoryFormStateStore();
+	}
+
+	@Bean
+	public RowWrapperFactory rowWrapperFactory() {
+		return new RowWrapperFactory(widgetPolicy(), v2fSchema);
+	}
 	@Bean
 	public ViewRenderer viewRenderer() {
 		return new ViewRenderer(viewResolver, new FixedLocaleResolver());
@@ -55,12 +69,12 @@ public class DefaultConfiguration {
 
 	@Bean
 	public DetailHandler detailHandler() {
-		return new DetailHandler(dao(), viewRenderer(), widgetPolicy());
+		return new DetailHandler(dao(), rowWrapperFactory(), formStateStore(), viewRenderer(), widgetPolicy());
 	}
 
 	@Bean
 	public SaveHandler saveHandler() {
-		return new SaveHandler(dao());
+		return new SaveHandler(dao(), formStateStore());
 	}
 
 	@Bean
@@ -68,7 +82,9 @@ public class DefaultConfiguration {
 		listHandler().setRouter(router());
 		detailHandler().setRouter(router());
 		indexHandler().setRouter(router());
-		dao().setRouter(router());
+		dao().setRowWrapperFactory(rowWrapperFactory());
+		rowWrapperFactory().setCatalog(dao().getCatalog());
+		rowWrapperFactory().setRouter(router());
 		return new Object();
 	}
 

@@ -22,6 +22,7 @@ public class V2FServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		if (request.getMethod().equals("POST") && request.getParameter("action").equals("save")) {
 			saveHandler.handle(request, response);
+			return;
 		}
 		router.route(request, response);
 	}
