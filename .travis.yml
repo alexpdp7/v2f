@@ -8,3 +8,7 @@ before_script:
   - psql -c "create database v2f_samples_petclinic with owner v2f_samples_petclinic;" -U postgres
 addons:
   postgresql: "9.4"
+cache:
+  directories:
+  - .autoconf
+  - $HOME/.m2
