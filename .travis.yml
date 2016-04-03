@@ -10,5 +10,4 @@ addons:
   postgresql: "9.4"
 cache:
   directories:
-  - .autoconf
   - $HOME/.m2
