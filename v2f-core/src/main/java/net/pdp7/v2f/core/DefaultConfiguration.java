@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.flyway.FlywayMigrationInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
@@ -78,7 +79,9 @@ public class DefaultConfiguration {
 	}
 
 	@Bean
-	public Object dummyCircular() {
+	// depend on FlywayMigrationInitializer to make sure database
+	// has been created so catalog is loaded correctly
+	public Object dummyCircular(FlywayMigrationInitializer flywayMigrationInitializer) {
 		listHandler().setRouter(router());
 		detailHandler().setRouter(router());
 		indexHandler().setRouter(router());
