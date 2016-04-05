@@ -5,7 +5,6 @@ import javax.sql.DataSource;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.flyway.FlywayMigrationInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
@@ -22,6 +21,7 @@ import net.pdp7.v2f.core.web.handlers.DetailHandler;
 import net.pdp7.v2f.core.web.handlers.IndexHandler;
 import net.pdp7.v2f.core.web.handlers.ListHandler;
 import net.pdp7.v2f.core.web.handlers.SaveHandler;
+import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 
 @Configuration
@@ -39,8 +39,15 @@ public class DefaultConfiguration {
 	}
 
 	@Bean
+	// TODO: depend on FlywayMigrationInitializer to make sure database
+	// has been created so catalog is loaded correctly
 	public DAO dao() {
-		return new DAO(dslContext, schemaCrawlerOptions());
+		return new DAO(dslContext, schemaCrawlerOptions(), rowWrapperFactory());
+	}
+
+	@Bean
+	public Catalog catalog() {
+		return dao().getCatalog();
 	}
 
 	@Bean
@@ -51,8 +58,9 @@ public class DefaultConfiguration {
 
 	@Bean
 	public RowWrapperFactory rowWrapperFactory() {
-		return new RowWrapperFactory(widgetPolicy(), v2fSchema);
+		return new RowWrapperFactory(router(), catalog(), widgetPolicy(), v2fSchema);
 	}
+
 	@Bean
 	public ViewRenderer viewRenderer() {
 		return new ViewRenderer(viewResolver, new FixedLocaleResolver());
@@ -60,35 +68,22 @@ public class DefaultConfiguration {
 
 	@Bean
 	public IndexHandler indexHandler() {
-		return new IndexHandler(dao(), viewRenderer());
+		return new IndexHandler(dao(), viewRenderer(), router());
 	}
 
 	@Bean
 	public ListHandler listHandler() {
-		return new ListHandler(dao(), viewRenderer());
+		return new ListHandler(dao(), viewRenderer(), router());
 	}
 
 	@Bean
 	public DetailHandler detailHandler() {
-		return new DetailHandler(dao(), rowWrapperFactory(), formStateStore(), viewRenderer(), widgetPolicy());
+		return new DetailHandler(dao(), rowWrapperFactory(), formStateStore(), viewRenderer(), router());
 	}
 
 	@Bean
 	public SaveHandler saveHandler() {
 		return new SaveHandler(dao(), formStateStore());
-	}
-
-	@Bean
-	// depend on FlywayMigrationInitializer to make sure database
-	// has been created so catalog is loaded correctly
-	public Object dummyCircular(FlywayMigrationInitializer flywayMigrationInitializer) {
-		listHandler().setRouter(router());
-		detailHandler().setRouter(router());
-		indexHandler().setRouter(router());
-		dao().setRowWrapperFactory(rowWrapperFactory());
-		rowWrapperFactory().setCatalog(dao().getCatalog());
-		rowWrapperFactory().setRouter(router());
-		return new Object();
 	}
 
 	@Value("${v2f.schema}")

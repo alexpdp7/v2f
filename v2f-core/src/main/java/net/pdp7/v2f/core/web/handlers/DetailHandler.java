@@ -15,7 +15,6 @@ import net.pdp7.v2f.core.dao.RowWrapperFactory;
 import net.pdp7.v2f.core.web.FormStateStore;
 import net.pdp7.v2f.core.web.Router;
 import net.pdp7.v2f.core.web.ViewRenderer;
-import net.pdp7.v2f.core.web.WidgetPolicy;
 
 public class DetailHandler {
 
@@ -23,19 +22,14 @@ public class DetailHandler {
 	protected final RowWrapperFactory rowWrapperFactory;
 	protected final FormStateStore formStateStore;
 	protected final ViewRenderer viewRenderer;
-	protected final WidgetPolicy widgetPolicy;
-	protected Router router;
+	protected final Router router;
 
 	public DetailHandler(DAO dao, RowWrapperFactory rowWrapperFactory, FormStateStore formStateStore,
-			ViewRenderer viewRenderer, WidgetPolicy widgetPolicy) {
+			ViewRenderer viewRenderer, Router router) {
 		this.dao = dao;
 		this.rowWrapperFactory = rowWrapperFactory;
 		this.formStateStore = formStateStore;
 		this.viewRenderer = viewRenderer;
-		this.widgetPolicy = widgetPolicy;
-	}
-
-	public void setRouter(Router router) {
 		this.router = router;
 	}
 
@@ -43,7 +37,6 @@ public class DetailHandler {
 	 * @param id is null for "new" rows
 	 */
 	public void handle(String table, String id, HttpServletRequest request, HttpServletResponse response) {
-		assert router != null : this + " router not configured";
 		Map<String, String[]> state = getState(request);
 		String internalError = getInternalError(state);
 		RowWrapper row = rowWrapperFactory.build(
