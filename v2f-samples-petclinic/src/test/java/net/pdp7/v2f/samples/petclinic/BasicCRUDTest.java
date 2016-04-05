@@ -6,41 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.jooq.DSLContext;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(Application.class)
-@WebIntegrationTest(randomPort = true)
-public class IntegrationTest {
-
-	@Value("${local.server.port}")
-	int port;
-
-	@Autowired
-	public DSLContext dslContext;
-
-	@Test
-	public void smokeTest() {
-		WebDriver driver = getDriver();
-		driver.get(getRoute("/"));
-		Assert.assertEquals(2, driver.findElements(By.tagName("li")).size());
-	}
-
-	protected String getRoute(String route) {
-		return "http://localhost:" + port + route;
-	}
+public class BasicCRUDTest extends AbstractIntegrationTest {
 
 	@Test
 	public void testCreateOwner() {
@@ -103,9 +75,5 @@ public class IntegrationTest {
 		emailAddressInput.clear();
 		emailAddressInput.sendKeys(emailAddress);
 		driver.findElement(By.cssSelector("input[type=submit]")).click();
-	}
-
-	protected WebDriver getDriver() {
-		return new HtmlUnitDriver();
 	}
 }
