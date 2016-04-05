@@ -16,24 +16,20 @@ public class IndexHandler {
 
 	protected final DAO dao;
 	public final ViewRenderer viewRenderer;
-	protected Router router;
+	protected final Router router;
 
-	public IndexHandler(DAO dao, ViewRenderer viewRenderer) {
+	public IndexHandler(DAO dao, ViewRenderer viewRenderer, Router router) {
 		this.viewRenderer = viewRenderer;
 		this.dao = dao;
+		this.router = router;
 	}
 
 	public void handle(HttpServletRequest request, HttpServletResponse response) {
-		assert router != null : this + " router not configured";
 		Map<String, String> tablesToRoutes = dao.getTables()
 				.stream()
 				.map(t -> t.getName())
 				.collect(Collectors.toMap(s -> s, s -> router.getListTableRoute(s)));
 		ImmutableMap<String, Map<String, String>> model = ImmutableMap.of("tables_to_routes", tablesToRoutes);
 		viewRenderer.renderView(request, response, model, "index");
-	}
-
-	public void setRouter(Router router) {
-		this.router = router;
 	}
 }

@@ -18,20 +18,16 @@ public class ListHandler {
 
 	protected final DAO dao;
 	public final ViewRenderer viewRenderer;
-	protected Router router;
+	protected final Router router;
 
-	public ListHandler(DAO dao, ViewRenderer viewRenderer) {
+	public ListHandler(DAO dao, ViewRenderer viewRenderer, Router router) {
 		this.dao = dao;
 		this.viewRenderer = viewRenderer;
-	}
-
-	public void setRouter(Router router) {
 		this.router = router;
 	}
 
 	public void handle(String table, HttpServletRequest request, HttpServletResponse response)
 			throws DataAccessException {
-		assert router != null : this + " router not configured";
 		List<RowWrapper> rows = dao.getList(table);
 		ImmutableMap<String, ?> model = new ImmutableMap.Builder<String, Object>()
 				.put("rows", rows)
