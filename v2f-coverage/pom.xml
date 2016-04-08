@@ -1,0 +1,116 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>net.pdp7</groupId>
+		<artifactId>v2f</artifactId>
+		<version>master</version>
+	</parent>
+	<artifactId>v2f-coverage</artifactId>
+	<name>v2f-coverage</name>
+
+	<!-- Bastardized multi-module coverage from:
+
+		https://dzone.com/articles/jacoco-maven-multi-module
+		http://www.lordofthejars.com/2012/07/jacoco-in-maven-multi-module-projects.html
+	-->
+
+	<properties>
+		<build.directory.v2f-core>../v2f-core/target</build.directory.v2f-core>
+		<build.directory.v2f-samples-petclinic>../v2f-samples-petclinic/target</build.directory.v2f-samples-petclinic>
+
+		<classes.directory.v2f-core>../v2f-core/target/classes</classes.directory.v2f-core>
+		<classes.directory.v2f-samples-petclinic>../v2f-samples-petclinic/target/classes</classes.directory.v2f-samples-petclinic>
+
+		<sources.directory.v2f-core>../v2f-core/src/main/java</sources.directory.v2f-core>
+		<sources.directory.v2f-samples-petclinic>../v2f-samples-petclinic/src/main/java</sources.directory.v2f-samples-petclinic>
+
+		<generated-sources.directory.v2f-core>../v2f-core/target/generated-sources/annotations</generated-sources.directory.v2f-core>
+		<generated-sources.directory.v2f-samples-petclinic>../v2f-samples-petclinic/target/generated-sources/annotations</generated-sources.directory.v2f-samples-petclinic>
+	</properties>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>jacoco-dependency-ant</id>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<phase>process-test-resources</phase>
+						<inherited>false</inherited>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.jacoco</groupId>
+									<artifactId>org.jacoco.ant</artifactId>
+									<version>${jacoco.version}</version>
+								</artifactItem>
+							</artifactItems>
+							<stripVersion>true</stripVersion>
+							<outputDirectory>${basedir}/target/jacoco-jars</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<taskdef name="report" classname="org.jacoco.ant.ReportTask">
+									<classpath path="${basedir}/target/jacoco-jars/org.jacoco.ant.jar" />
+								</taskdef>
+								<mkdir dir="${basedir}/target/coverage-report" />
+								<report>
+									<executiondata>
+										<fileset dir="${build.directory.v2f-core}">
+											<include name="jacoco.exec" />
+										</fileset>
+										<fileset dir="${build.directory.v2f-samples-petclinic}">
+											<include name="jacoco.exec" />
+										</fileset>
+									</executiondata>
+									<structure name="V2F Coverage">
+										<group name="Coverage">
+											<classfiles>
+												<fileset dir="${classes.directory.v2f-core}" />
+												<fileset dir="${classes.directory.v2f-samples-petclinic}" />
+											</classfiles>
+											<sourcefiles encoding="UTF-8">
+												<fileset dir="${sources.directory.v2f-core}" />
+												<fileset dir="${sources.directory.v2f-samples-petclinic}"></fileset>
+											</sourcefiles>
+										</group>
+									</structure>
+									<html destdir="${basedir}/target/coverage-report/html" />
+									<xml destfile="${basedir}/target/coverage-report/coverage-report.xml" />
+									<csv destfile="${basedir}/target/coverage-report/coverage-report.csv" />
+								</report>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.jacoco</groupId>
+						<artifactId>org.jacoco.ant</artifactId>
+						<version>${jacoco.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
