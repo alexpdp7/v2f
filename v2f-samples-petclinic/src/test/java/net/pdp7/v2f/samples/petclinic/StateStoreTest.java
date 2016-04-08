@@ -12,7 +12,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 
-public class StateStoreTests extends AbstractIntegrationTest {
+public class StateStoreTest extends AbstractIntegrationTest {
 
 	@Test
 	public void test() {
