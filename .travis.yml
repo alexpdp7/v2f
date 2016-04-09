@@ -11,3 +11,5 @@ addons:
 cache:
   directories:
   - $HOME/.m2
+after_success:
+  - mvn -pl v2f-coverage post-integration-test ; cd v2f-coverage ; mvn coveralls:report

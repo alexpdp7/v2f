@@ -110,6 +110,20 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			<plugin>
+				<groupId>org.eluder.coveralls</groupId>
+				<artifactId>coveralls-maven-plugin</artifactId>
+				<version>4.1.0</version>
+				<configuration>
+					<jacocoReports>
+						<jacocoReport>target/coverage-report/coverage-report.xml</jacocoReport>
+					</jacocoReports>
+					<sourceDirectories>
+						<sourceDirectory>../v2f-core/src/main/java</sourceDirectory>
+						<sourceDirectory>../v2f-samples-petclinic/src/main/java</sourceDirectory>
+					</sourceDirectories>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
