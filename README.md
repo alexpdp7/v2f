@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/alexpdp7/v2f.svg?branch=master)](https://travis-ci.org/alexpdp7/v2f)
+[![Coverage Status](https://coveralls.io/repos/github/alexpdp7/v2f/badge.svg?branch=master)](https://coveralls.io/github/alexpdp7/v2f?branch=master)
+
 # v2f
 
 The View-View Framework (v2f) is a web framework designed to develop CRUD applications over an SQL database with a web interface. The central idea of the framework is to use database views to define the interface of the application, allowing us to express how data is visualized and edited using SQL, perhaps the most well-suited tool to do so. Additionally, this allows the framework to be very simple.
