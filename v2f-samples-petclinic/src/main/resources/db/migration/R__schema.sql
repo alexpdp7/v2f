@@ -79,3 +79,8 @@ create or replace view vets as
 set search_path to petclinic;
 
 insert into species(name) values ('Cat'), ('Dog'), ('Iguana'), ('Lizard');
+insert into owners(name, contact_information, email_address) values
+  ('John Doe', 'Fifth Avenue 24', 'john@doe.com'),
+  ('Matt Smith', 'Deacon Street 12', 'matt.smith@example.com'),
+  ('Dana Foo', 'Parliament Square 3', 'dfoo@foo.com');
+insert into vets(name) values ('Joe Bar'), ('Lana Jones'), ('Jules Qux');
