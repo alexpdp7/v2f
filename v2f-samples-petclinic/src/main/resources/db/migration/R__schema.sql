@@ -70,6 +70,12 @@ create or replace view owners as
          email_address
   from   petclinic.owners;
 
+create or replace view vets as
+  select vet_id as _id,
+         name as _as_string,
+         name
+  from   petclinic.vets;
+
 set search_path to petclinic;
 
 insert into species(name) values ('Cat'), ('Dog'), ('Iguana'), ('Lizard');
