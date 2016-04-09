@@ -1,3 +1,5 @@
-<ul th:each="table_to_route : ${tables_to_routes}">
-	<li><a th:href="${table_to_route.value}" th:text="${table_to_route.key}">table</a></li>
+<ul>
+	<li th:each="table_to_route : ${tables_to_routes}">
+		<a th:href="${table_to_route.value}" th:text="${table_to_route.key}">table</a>
+	</li>
 </ul>
