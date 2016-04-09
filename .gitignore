@@ -1,2 +1,3 @@
 /target/
 .fbExcludeFilterFile
+edu.umd.cs.findbugs.core.prefs
