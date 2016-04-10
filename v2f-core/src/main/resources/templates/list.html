@@ -1,8 +1,13 @@
 <table>
+	<tr>
+		<th>element</th>
+		<th th:each="list_column : ${list_columns}" th:text="${list_column}">column</th>
+	</tr>
 	<tr th:each="row : ${rows}">
 		<td>
 			<a th:href="${row.link}" th:text="${row.asString}">Row as string</a>
 		</td>
+		<td th:each="list_column : ${list_columns}" th:text="${row.getListColumn(list_column)}">value</td>
 	</tr>
 </table>
 

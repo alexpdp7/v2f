@@ -27,6 +27,10 @@ Each master-detail view *must* have an `_as_string` column, which is used to cre
 
 All other columns will be displayed and editable in the detail view.
 
+#### List display columns
+
+Columns named `column__list` will be shown in the list view.
+
 #### Comments
 
 Comments on columns configure how the column is displayed and edited:

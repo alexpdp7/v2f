@@ -38,6 +38,7 @@ public class ListHandler {
 		List<RowWrapper> rows = dao.getList(table, paginationPolicy.defaultPageSize);
 		ImmutableMap<String, ?> model = new ImmutableMap.Builder<String, Object>()
 				.put("rows", rows)
+				.put("list_columns", dao.getListColumns(table))
 				.put("new_url", router.getNewRoute(table))
 				.build();
 		viewRenderer.renderView(request, response, model, "list");

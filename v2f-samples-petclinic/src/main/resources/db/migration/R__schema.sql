@@ -67,7 +67,9 @@ create or replace view owners as
          name as _as_string,
          name,
          contact_information,
-         email_address
+         contact_information as contact_information__list,
+         email_address,
+         email_address as email_address__list
   from   petclinic.owners;
 
 create or replace view vets as

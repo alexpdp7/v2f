@@ -101,7 +101,7 @@ public class DAO {
 		assertViewableView(table);
 		assert rowWrapperFactory != null;
 		return dslContext
-				.select(field("_id"), field("_as_string"))
+				.select()
 				.from(table)
 				.limit(numberOfRows)
 				.fetch(record -> rowWrapperFactory.build(table, record, null, null));
@@ -112,5 +112,14 @@ public class DAO {
 		protected DAOException(String message) {
 			super(message);
 		}
+	}
+
+	public List<String> getListColumns(String table) {
+		return getTable(table)
+				.getColumns()
+				.stream()
+				.filter(c -> c.getName().endsWith("__list"))
+				.map(c -> c.getName().replace("__list", ""))
+				.collect(Collectors.toList());
 	}
 }

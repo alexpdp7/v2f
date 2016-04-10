@@ -42,9 +42,13 @@ public class RowWrapper {
 	public List<ColumnWrapper> getColumns() {
 		return rowWrapperFactory.dao.getTable(table)
 				.getColumns().stream()
-				.filter(c -> !c.getName().startsWith("_"))
+				.filter(c -> !c.getName().startsWith("_") && !c.getName().endsWith("__list"))
 				.map(column -> new ColumnWrapper(column))
 				.collect(Collectors.toList());
+	}
+
+	public Object getListColumn(String column) {
+		return record.getValue(column + "__list");
 	}
 
 	public class ColumnWrapper {
