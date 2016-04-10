@@ -4,6 +4,9 @@ import static org.jooq.impl.DSL.field;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,11 +66,30 @@ public class SaveHandler {
 		String table = tableAndIds.table;
 		Map<Field<Object>, Object> fields = list
 				.stream()
-				.collect(Collectors.toMap(fv -> field(fv.formInputName.column), fv -> fv.value));
+				.collect(Collectors.toMap(fv -> field(fv.formInputName.column), fv -> convertToObject(fv)));
 		if (tableAndIds.id == null) {
 			dao.insert(table, fields);
 		} else {
 			dao.update(table, fields, tableAndIds.id);
+		}
+	}
+
+	protected Object convertToObject(FormValue formValue) {
+		String type = dao.getTable(formValue.formInputName.table).lookupColumn(formValue.formInputName.column).get().getColumnDataType().getFullName();
+		if (type.equals("date")) {
+			return parseDate(formValue.value);
+		}
+		if (type.equals("int4")) {
+			return Integer.parseInt(formValue.value);
+		}
+		return formValue.value;
+	}
+
+	protected Date parseDate(String value) {
+		try {
+			return new Date(new SimpleDateFormat("yyyy-MM-dd").parse(value).getTime());
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
