@@ -91,28 +91,30 @@ comment on column pets.owner is 'dropdown_owners';
 set search_path to petclinic;
 
 insert into species(name) values ('Cat'), ('Dog'), ('Iguana'), ('Lizard');
-insert into owners(name, contact_information, email_address) values
-  ('John Doe', 'Fifth Avenue 24', 'john@doe.com'),
-  ('Matt Smith', 'Deacon Street 12', 'matt.smith@example.com'),
-  ('Dana Foo', 'Parliament Square 3', 'dfoo@foo.com');
+
 insert into vets(name) values ('Joe Bar'), ('Lana Jones'), ('Jules Qux');
 
-insert into pets(name, species_id, birth, owner_id)
-  select 'Cleo' as name, 'cat' as species, '03/12/1984' as birth, owner_id
-  from owners
-  where owners.name = 'John Doe';
+insert into owners(name, contact_information, email_address)
+  select name || ' ' || surname as name,
+         street || ' ' || (random()*100)::int as contact_information,
+         lower(name || '.' || surname || (random()*100)::int || '@example.com') as email_address
+  from   (values('John'), ('Peter'), ('Louis'), ('Mary'), ('Stuart'), ('Helen')) as names(name)
+  join   (values('Smith'), ('Jordan'), ('Flynn'), ('Long'), ('Bird'), ('Doe')) as surnames(surname)
+  on     true
+  join   (values('Fifth Avenue'), ('Parliament Square'), ('Long Street'), ('Main Street'),
+                ('Jordan Avenue'), ('High Street')) as streets(street)
+  on     true;
 
-insert into pets(name, species_id, birth, owner_id)
-  select 'Fido' as name, 'dog' as species, '07/05/1993' as birth, owner_id
-  from owners
-  where owners.name = 'Matt Smith';
-
-insert into pets(name, species_id, birth, owner_id)
-  select 'Lucy' as name, 'iguana' as species, '06/05/1995' as birth, owner_id
-  from owners
-  where owners.name = 'Matt Smith';
-
-insert into pets(name, species_id, birth, owner_id)
-  select 'Scully' as name, 'lizard' as species, '02/02/1997' as birth, owner_id
-  from owners
-  where owners.name = 'Dana Foo';
+insert into pets(owner_id, species_id, name, birth)
+  select owner_id, species_id, name, birth
+  from   (
+    select random() as selectivity,
+           owners.owner_id as owner_id,
+           species.species_id as species_id,
+           pet_name as name,
+           '1970-01-01'::date + (random()*(current_date - '1970-01-01'::date)) * interval '1 day' as birth
+    from   owners
+    join   species on true
+    join   (values('Cleo'), ('Fido'), ('Spot'), ('Scully'), ('Dot'), ('Tiger')) as pet_names(pet_name) on true)
+    as pets
+  where selectivity < 0.03;
