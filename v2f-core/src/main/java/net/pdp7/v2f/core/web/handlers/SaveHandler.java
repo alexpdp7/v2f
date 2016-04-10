@@ -61,7 +61,7 @@ public class SaveHandler {
 
 	protected void save(TableAndIds tableAndIds, List<FormValue> list) {
 		String table = tableAndIds.table;
-		Map<Field<Object>, String> fields = list
+		Map<Field<Object>, Object> fields = list
 				.stream()
 				.collect(Collectors.toMap(fv -> field(fv.formInputName.column), fv -> fv.value));
 		if (tableAndIds.id == null) {

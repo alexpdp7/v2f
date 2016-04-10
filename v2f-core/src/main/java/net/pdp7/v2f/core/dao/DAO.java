@@ -76,14 +76,14 @@ public class DAO {
 		return record;
 	}
 
-	public void insert(String table, Map<Field<Object>, String> fields) {
+	public void insert(String table, Map<Field<Object>, Object> fields) {
 		assertViewableView(table);
 		dslContext.insertInto(table(table))
 				.set(fields)
 				.execute();
 	}
 
-	public void update(String table, Map<Field<Object>, String> fields, String id) {
+	public void update(String table, Map<Field<Object>, Object> fields, String id) {
 		assertViewableView(table);
 		dslContext.update(table(table))
 				.set(fields)
