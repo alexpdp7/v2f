@@ -26,3 +26,9 @@ Each master-detail view *must* have an `_as_string` column, which is used to cre
 ### Other columns
 
 All other columns will be displayed and editable in the detail view.
+
+#### Comments
+
+Comments on columns configure how the column is displayed and edited:
+
+* `dropdown_{viewname}` will create a field to edit a foreign key column as a dropdown of choices on target `viewname`.
