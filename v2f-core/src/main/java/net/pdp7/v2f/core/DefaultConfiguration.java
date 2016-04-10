@@ -15,6 +15,7 @@ import net.pdp7.v2f.core.dao.DAO;
 import net.pdp7.v2f.core.dao.RowWrapperFactory;
 import net.pdp7.v2f.core.web.FormStateStore;
 import net.pdp7.v2f.core.web.MemoryFormStateStore;
+import net.pdp7.v2f.core.web.PaginationPolicy;
 import net.pdp7.v2f.core.web.Router;
 import net.pdp7.v2f.core.web.ViewRenderer;
 import net.pdp7.v2f.core.web.WidgetPolicy;
@@ -39,6 +40,11 @@ public class DefaultConfiguration {
 	}
 
 	@Bean
+	public PaginationPolicy paginationPolicy() {
+		return new PaginationPolicy(50);
+	}
+
+	@Bean
 	public DAO dao() {
 		return new DAO(dslContext, v2fSchema, schemaCrawlerOptions());
 	}
@@ -51,7 +57,7 @@ public class DefaultConfiguration {
 
 	@Bean
 	public RowWrapperFactory rowWrapperFactory() {
-		return new RowWrapperFactory(widgetPolicy());
+		return new RowWrapperFactory(widgetPolicy(), paginationPolicy());
 	}
 	@Bean
 	public ViewRenderer viewRenderer() {
@@ -65,7 +71,7 @@ public class DefaultConfiguration {
 
 	@Bean
 	public ListHandler listHandler() {
-		return new ListHandler(dao(), viewRenderer());
+		return new ListHandler(dao(), viewRenderer(), paginationPolicy());
 	}
 
 	@Bean

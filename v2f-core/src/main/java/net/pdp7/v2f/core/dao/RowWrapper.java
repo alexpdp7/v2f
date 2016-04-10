@@ -78,7 +78,7 @@ public class RowWrapper {
 		}
 
 		public List<RowWrapper> getOptions() {
-			return rowWrapperFactory.dao.getList(column.getRemarks().replace("dropdown_", ""));
+			return rowWrapperFactory.dao.getList(column.getRemarks().replace("dropdown_", ""), rowWrapperFactory.paginationPolicy.defaultPageSize);
 		}
 	}
 }

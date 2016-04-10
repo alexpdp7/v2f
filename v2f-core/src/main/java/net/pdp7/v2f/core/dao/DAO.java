@@ -97,12 +97,13 @@ public class DAO {
 				.execute();
 	}
 
-	public List<RowWrapper> getList(String table) {
+	public List<RowWrapper> getList(String table, int numberOfRows) {
 		assertViewableView(table);
 		assert rowWrapperFactory != null;
 		return dslContext
 				.select(field("_id"), field("_as_string"))
 				.from(table)
+				.limit(numberOfRows)
 				.fetch(record -> rowWrapperFactory.build(table, record, null, null));
 	}
 
