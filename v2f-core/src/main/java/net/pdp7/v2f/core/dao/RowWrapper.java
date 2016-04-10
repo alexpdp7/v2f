@@ -40,7 +40,7 @@ public class RowWrapper {
 	}
 
 	public List<ColumnWrapper> getColumns() {
-		return rowWrapperFactory.catalog.lookupTable(rowWrapperFactory.catalog.lookupSchema(rowWrapperFactory.v2fSchema).get(), table).get()
+		return rowWrapperFactory.dao.getTable(table)
 				.getColumns().stream()
 				.filter(c -> !c.getName().startsWith("_"))
 				.map(column -> new ColumnWrapper(column))
