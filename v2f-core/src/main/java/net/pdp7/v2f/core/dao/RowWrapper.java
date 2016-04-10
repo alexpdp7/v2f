@@ -65,6 +65,10 @@ public class RowWrapper {
 					: record != null ? record.getValue(getName()) : null;
 		}
 
+		public String getCssClass() {
+			return "edit_column_" + getName() + " edit_table_" + table + " edit_id_" + getId();
+		}
+
 		public String getFormInputName() {
 			return rowWrapperFactory.router.getFormInputName(table, getId(), getName(), newFormId);
 		}
