@@ -21,8 +21,6 @@ public class DateFieldTest extends AbstractIntegrationTest {
 		driver.get(getRoute("/pets/new/"));
 		driver.findElement(By.cssSelector(".edit_table_pets.edit_column_name")).sendKeys(name);
 		driver.findElement(By.cssSelector(".edit_table_pets.edit_column_birth")).sendKeys("1983-05-02");
-		driver.findElement(By.cssSelector(".edit_table_pets.edit_column_owner")).sendKeys("1");
-		driver.findElement(By.cssSelector(".edit_table_pets.edit_column_species")).sendKeys("cat");
 		driver.findElement(By.cssSelector("input[type=submit]")).click();
 
 		// check date was inserted correctly

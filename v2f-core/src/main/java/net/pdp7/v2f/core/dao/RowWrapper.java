@@ -76,5 +76,9 @@ public class RowWrapper {
 		public String getWidgetName() {
 			return "widget-" + rowWrapperFactory.widgetPolicy.getWidgetName(column);
 		}
+
+		public List<RowWrapper> getOptions() {
+			return rowWrapperFactory.dao.getList(column.getRemarks().replace("dropdown_", ""));
+		}
 	}
 }

@@ -1,0 +1,3 @@
+<select th:fragment="widget(column)" th:class="${column.cssClass}" th:name="${column.formInputName}">
+	<option th:each="option : ${column.options}" th:text="${option.asString}" th:value="${option.id}" th:selected="${column.value == null ? null : option.id.toString().equals(column.value.toString())}">option</option>
+</select>

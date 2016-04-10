@@ -11,6 +11,9 @@ public class WidgetPolicy {
 	}
 
 	public String getWidgetName(Column column) {
+		if (column.getRemarks().startsWith("dropdown_")) {
+			return "dropdown";
+		}
 		if (column.getType().getName().equals("text") && column.getSize() > textAreaLengthThreshold) {
 			return "textarea";
 		}

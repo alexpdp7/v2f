@@ -85,6 +85,9 @@ create or replace view pets as
          owner_id as owner
   from   petclinic.pets;
 
+comment on column pets.species is 'dropdown_species';
+comment on column pets.owner is 'dropdown_owners';
+
 set search_path to petclinic;
 
 insert into species(name) values ('Cat'), ('Dog'), ('Iguana'), ('Lizard');
