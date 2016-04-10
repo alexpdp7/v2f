@@ -10,6 +10,6 @@ public class SmokeTest extends AbstractIntegrationTest {
 	public void smokeTest() {
 		WebDriver driver = getDriver();
 		driver.get(getRoute("/"));
-		Assert.assertEquals(3, driver.findElements(By.tagName("li")).size());
+		Assert.assertEquals(4, driver.findElements(By.tagName("li")).size());
 	}
 }

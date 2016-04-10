@@ -40,7 +40,7 @@ public class DefaultConfiguration {
 
 	@Bean
 	public DAO dao() {
-		return new DAO(dslContext, schemaCrawlerOptions());
+		return new DAO(dslContext, v2fSchema, schemaCrawlerOptions());
 	}
 
 	@Bean
@@ -51,7 +51,7 @@ public class DefaultConfiguration {
 
 	@Bean
 	public RowWrapperFactory rowWrapperFactory() {
-		return new RowWrapperFactory(widgetPolicy(), v2fSchema);
+		return new RowWrapperFactory(widgetPolicy());
 	}
 	@Bean
 	public ViewRenderer viewRenderer() {
@@ -86,7 +86,7 @@ public class DefaultConfiguration {
 		detailHandler().setRouter(router());
 		indexHandler().setRouter(router());
 		dao().setRowWrapperFactory(rowWrapperFactory());
-		rowWrapperFactory().setCatalog(dao().getCatalog());
+		rowWrapperFactory().setDao(dao());
 		rowWrapperFactory().setRouter(router());
 		return new Object();
 	}

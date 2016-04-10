@@ -40,7 +40,7 @@ public class RowWrapper {
 	}
 
 	public List<ColumnWrapper> getColumns() {
-		return rowWrapperFactory.catalog.lookupTable(rowWrapperFactory.catalog.lookupSchema(rowWrapperFactory.v2fSchema).get(), table).get()
+		return rowWrapperFactory.dao.getTable(table)
 				.getColumns().stream()
 				.filter(c -> !c.getName().startsWith("_"))
 				.map(column -> new ColumnWrapper(column))
@@ -65,12 +65,20 @@ public class RowWrapper {
 					: record != null ? record.getValue(getName()) : null;
 		}
 
+		public String getCssClass() {
+			return "edit_column_" + getName() + " edit_table_" + table + " edit_id_" + getId();
+		}
+
 		public String getFormInputName() {
 			return rowWrapperFactory.router.getFormInputName(table, getId(), getName(), newFormId);
 		}
 
 		public String getWidgetName() {
 			return "widget-" + rowWrapperFactory.widgetPolicy.getWidgetName(column);
+		}
+
+		public List<RowWrapper> getOptions() {
+			return rowWrapperFactory.dao.getList(column.getRemarks().replace("dropdown_", ""));
 		}
 	}
 }

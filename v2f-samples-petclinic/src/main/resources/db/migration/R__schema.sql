@@ -76,6 +76,18 @@ create or replace view vets as
          name
   from   petclinic.vets;
 
+create or replace view pets as
+  select pet_id as _id,
+         name as _as_string,
+         name,
+         species_id as species,
+         birth,
+         owner_id as owner
+  from   petclinic.pets;
+
+comment on column pets.species is 'dropdown_species';
+comment on column pets.owner is 'dropdown_owners';
+
 set search_path to petclinic;
 
 insert into species(name) values ('Cat'), ('Dog'), ('Iguana'), ('Lizard');
@@ -84,3 +96,23 @@ insert into owners(name, contact_information, email_address) values
   ('Matt Smith', 'Deacon Street 12', 'matt.smith@example.com'),
   ('Dana Foo', 'Parliament Square 3', 'dfoo@foo.com');
 insert into vets(name) values ('Joe Bar'), ('Lana Jones'), ('Jules Qux');
+
+insert into pets(name, species_id, birth, owner_id)
+  select 'Cleo' as name, 'cat' as species, '03/12/1984' as birth, owner_id
+  from owners
+  where owners.name = 'John Doe';
+
+insert into pets(name, species_id, birth, owner_id)
+  select 'Fido' as name, 'dog' as species, '07/05/1993' as birth, owner_id
+  from owners
+  where owners.name = 'Matt Smith';
+
+insert into pets(name, species_id, birth, owner_id)
+  select 'Lucy' as name, 'iguana' as species, '06/05/1995' as birth, owner_id
+  from owners
+  where owners.name = 'Matt Smith';
+
+insert into pets(name, species_id, birth, owner_id)
+  select 'Scully' as name, 'lizard' as species, '02/02/1997' as birth, owner_id
+  from owners
+  where owners.name = 'Dana Foo';

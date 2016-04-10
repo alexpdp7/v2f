@@ -19,11 +19,13 @@ import schemacrawler.utility.SchemaCrawlerUtility;
 public class DAO {
 
 	protected final DSLContext dslContext;
+	protected final String v2fSchema;
 	protected RowWrapperFactory rowWrapperFactory;
 	protected final SchemaCrawlerOptions schemaCrawlerOptions;
 
-	public DAO(DSLContext dslContext, SchemaCrawlerOptions schemaCrawlerOptions) {
+	public DAO(DSLContext dslContext, String v2fSchema, SchemaCrawlerOptions schemaCrawlerOptions) {
 		this.dslContext = dslContext;
+		this.v2fSchema = v2fSchema;
 		this.schemaCrawlerOptions = schemaCrawlerOptions;
 	}
 
@@ -35,6 +37,10 @@ public class DAO {
 		// This should be cached, however note that this method should be careful
 		// so that it does not execute until the database has been setup!
 		return (Catalog) dslContext.connectionResult(connection -> SchemaCrawlerUtility.getCatalog(connection, schemaCrawlerOptions));
+	}
+
+	public Table getTable(String table) {
+		return getCatalog().lookupTable(getCatalog().lookupSchema(v2fSchema).get(), table).get();
 	}
 
 	public List<Table> getTables() {
@@ -76,14 +82,14 @@ public class DAO {
 		return record;
 	}
 
-	public void insert(String table, Map<Field<Object>, String> fields) {
+	public void insert(String table, Map<Field<Object>, Object> fields) {
 		assertViewableView(table);
 		dslContext.insertInto(table(table))
 				.set(fields)
 				.execute();
 	}
 
-	public void update(String table, Map<Field<Object>, String> fields, String id) {
+	public void update(String table, Map<Field<Object>, Object> fields, String id) {
 		assertViewableView(table);
 		dslContext.update(table(table))
 				.set(fields)
