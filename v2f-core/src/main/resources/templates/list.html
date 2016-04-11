@@ -1,3 +1,8 @@
+<form th:if="${has_plain_text_search}" id="_plain_text_search_form">
+	<input type="text" name="_plain_text_search" th:value="${_plain_text_search}"/>
+	<input type="submit"/>
+</form>
+
 <table>
 	<tr>
 		<th>element</th>

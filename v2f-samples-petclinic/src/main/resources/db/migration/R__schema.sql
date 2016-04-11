@@ -69,7 +69,8 @@ create or replace view owners as
          contact_information,
          contact_information as contact_information__list,
          email_address,
-         email_address as email_address__list
+         email_address as email_address__list,
+         name || ' ' || email_address || ' ' || contact_information as _plain_text_search
   from   petclinic.owners;
 
 create or replace view vets as
@@ -84,7 +85,8 @@ create or replace view pets as
          name,
          species_id as species,
          birth,
-         owner_id as owner
+         owner_id as owner,
+         name as _plain_text_search
   from   petclinic.pets;
 
 comment on column pets.species is 'dropdown_species';

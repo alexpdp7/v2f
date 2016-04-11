@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.jooq.exception.DataAccessException;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 
 import net.pdp7.v2f.core.dao.DAO;
 import net.pdp7.v2f.core.dao.RowWrapper;
@@ -35,12 +36,16 @@ public class ListHandler {
 	public void handle(String table, HttpServletRequest request, HttpServletResponse response)
 			throws DataAccessException {
 		assert router != null : this + " router not configured";
-		List<RowWrapper> rows = dao.getList(table, paginationPolicy.defaultPageSize);
-		ImmutableMap<String, ?> model = new ImmutableMap.Builder<String, Object>()
+		String plainTextSearch = request.getParameter("_plain_text_search");
+		List<RowWrapper> rows = dao.getList(table, paginationPolicy.defaultPageSize, plainTextSearch);
+		Builder<String, Object> model = new ImmutableMap.Builder<String, Object>()
 				.put("rows", rows)
 				.put("list_columns", dao.getListColumns(table))
-				.put("new_url", router.getNewRoute(table))
-				.build();
-		viewRenderer.renderView(request, response, model, "list");
+				.put("has_plain_text_search", dao.hasPlainTextSearch(table))
+				.put("new_url", router.getNewRoute(table));
+		if (plainTextSearch != null) {
+			model.put("_plain_text_search", plainTextSearch);
+		}
+		viewRenderer.renderView(request, response, model.build(), "list");
 	}
 }

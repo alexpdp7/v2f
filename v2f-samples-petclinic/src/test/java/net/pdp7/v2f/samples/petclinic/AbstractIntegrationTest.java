@@ -1,5 +1,8 @@
 package net.pdp7.v2f.samples.petclinic;
 
+import static org.jooq.impl.DSL.field;
+import static org.jooq.impl.DSL.table;
+
 import org.jooq.DSLContext;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
@@ -28,4 +31,13 @@ public abstract class AbstractIntegrationTest {
 	protected WebDriver getDriver() {
 		return new HtmlUnitDriver();
 	}
+
+	protected void insertOwner(String name, String contactInformation, String emailAddress) {
+		dslContext.insertInto(table("owners"))
+				.set(field("name"), name)
+				.set(field("contact_information"), contactInformation)
+				.set(field("email_address"), emailAddress)
+				.execute();
+	}
+
 }
