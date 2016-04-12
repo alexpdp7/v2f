@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import org.jooq.Record;
 
+import com.google.common.base.Strings;
+
 import schemacrawler.schema.Column;
 
 public class RowWrapper {
@@ -65,12 +67,16 @@ public class RowWrapper {
 
 		/** @return null for new rows */
 		public Object getValue() {
-			return formState != null ? formState.get(getFormInputName())[0]
+			return formState != null ? formState.getOrDefault(getFormInputName(), new String[] {null})[0]
 					: record != null ? record.getValue(getName()) : null;
 		}
 
 		public String getCssClass() {
-			return "edit_column_" + getName() + " edit_table_" + table + " edit_id_" + getId();
+			return getCssClassForWhat("edit");
+		}
+
+		public String getCssClassForWhat(String forWhat) {
+			return forWhat + "_column_" + getName() + " " + forWhat + "_table_" + table + " " + forWhat + "_id_" + getId();
 		}
 
 		public String getFormInputName() {
@@ -83,10 +89,19 @@ public class RowWrapper {
 
 		public List<RowWrapper> getOptions() {
 			return rowWrapperFactory.dao.getList(
-					column.getRemarks().replace("dropdown_", ""),
+					getReferencedTable(),
 					rowWrapperFactory.paginationPolicy.defaultPageSize,
 					null
 			);
+		}
+
+		protected String getReferencedTable() {
+			return column.getRemarks().replace("dropdown_", "").replace("lookup_", "");
+		}
+
+		public String getReferencedAsString() {
+			return getValue() == null || Strings.isNullOrEmpty(getValue().toString()) ? null
+					: rowWrapperFactory.dao.loadRecord(getReferencedTable(), getValue().toString()).getValue("_as_string").toString();
 		}
 	}
 }

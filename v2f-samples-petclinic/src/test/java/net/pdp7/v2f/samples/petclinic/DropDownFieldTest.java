@@ -23,7 +23,10 @@ public class DropDownFieldTest extends AbstractIntegrationTest {
 		driver.findElement(By.cssSelector(".edit_table_pets.edit_column_name")).sendKeys(name);
 		driver.findElement(By.cssSelector(".edit_table_pets.edit_column_birth")).sendKeys("1983-05-02");
 		new Select(driver.findElement(By.cssSelector(".edit_table_pets.edit_column_species"))).selectByVisibleText("Iguana");
-		driver.findElement(By.cssSelector("input[type=submit]")).click();
+		driver.findElement(By.cssSelector(".lookup_text_widget_column_owner")).sendKeys("doe");
+		driver.findElement(By.cssSelector(".lookup_submit_column_owner")).click();
+		driver.findElements(By.cssSelector("input[type=radio]")).get(1).click();
+		driver.findElement(By.cssSelector("input[name=action][value=save]")).click();
 
 		// check species was inserted correctly
 		Map<String, Object> insertedPet = dslContext
@@ -47,7 +50,7 @@ public class DropDownFieldTest extends AbstractIntegrationTest {
 
 		// edit species
 		new Select(driver.findElement(By.cssSelector(".edit_table_pets.edit_column_species"))).selectByVisibleText("Lizard");
-		driver.findElement(By.cssSelector("input[type=submit]")).click();
+		driver.findElement(By.cssSelector("input[name=action][value=save]")).click();
 
 		// check species was updated correctly
 		Map<String, Object> updatedPet = dslContext

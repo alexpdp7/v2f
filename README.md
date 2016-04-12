@@ -40,3 +40,4 @@ Columns named `column__list` will be shown in the list view.
 Comments on columns configure how the column is displayed and edited:
 
 * `dropdown_{viewname}` will create a field to edit a foreign key column as a dropdown of choices on target `viewname`.
+* `lookup_{viewname}` will create a field to edit a foreign key column as a lookup on target `viewname`; target must have a `_plain_text_search` column.

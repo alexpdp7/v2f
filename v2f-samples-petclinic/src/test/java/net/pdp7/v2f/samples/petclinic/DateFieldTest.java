@@ -21,7 +21,10 @@ public class DateFieldTest extends AbstractIntegrationTest {
 		driver.get(getRoute("/pets/new/"));
 		driver.findElement(By.cssSelector(".edit_table_pets.edit_column_name")).sendKeys(name);
 		driver.findElement(By.cssSelector(".edit_table_pets.edit_column_birth")).sendKeys("1983-05-02");
-		driver.findElement(By.cssSelector("input[type=submit]")).click();
+		driver.findElement(By.cssSelector(".lookup_text_widget_column_owner")).sendKeys("doe");
+		driver.findElement(By.cssSelector(".lookup_submit_column_owner")).click();
+		driver.findElements(By.cssSelector("input[type=radio]")).get(1).click();
+		driver.findElement(By.cssSelector("input[name=action][value=save]")).click();
 
 		// check date was inserted correctly
 		Map<String, Object> inserted = dslContext
@@ -39,7 +42,7 @@ public class DateFieldTest extends AbstractIntegrationTest {
 		// edit birth date
 		driver.findElement(By.cssSelector(".edit_table_pets.edit_column_birth")).clear();
 		driver.findElement(By.cssSelector(".edit_table_pets.edit_column_birth")).sendKeys("1972-04-06");
-		driver.findElement(By.cssSelector("input[type=submit]")).click();
+		driver.findElement(By.cssSelector("input[name=action][value=save]")).click();
 
 		// check date was updated correctly
 		Map<String, Object> updated = dslContext

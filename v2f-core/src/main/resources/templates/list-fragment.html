@@ -1,0 +1,18 @@
+<table th:fragment="list(list_columns, rows, input_name)">
+	<tr>
+		<th/>
+		<th>element</th>
+		<th th:each="list_column : ${list_columns}" th:text="${list_column}">column</th>
+	</tr>
+	<tr th:each="row : ${rows}">
+		<td>
+			<input type="radio" th:name="${input_name}" th:value="${row.id}"/>
+		</td>
+		<td>
+			<a th:href="${row.link}" th:text="${row.asString}">Row as string</a>
+		</td>
+		<td th:each="list_column : ${list_columns}" th:text="${row.getListColumn(list_column)}">value</td>
+	</tr>
+</table>
+
+<a th:href="${new_url}">new</a>

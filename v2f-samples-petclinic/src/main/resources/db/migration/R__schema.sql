@@ -90,7 +90,7 @@ create or replace view pets as
   from   petclinic.pets;
 
 comment on column pets.species is 'dropdown_species';
-comment on column pets.owner is 'dropdown_owners';
+comment on column pets.owner is 'lookup_owners';
 
 set search_path to petclinic;
 

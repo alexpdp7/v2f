@@ -2,6 +2,7 @@ package net.pdp7.v2f.core.web.handlers;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,7 +60,23 @@ public class DetailHandler {
 			model.put("internal_error", internalError);
 		}
 
+		if (state != null) {
+			Map<String, Object> searches = state.entrySet().stream()
+					.filter(e -> e.getKey().endsWith("__lookup_search"))
+					.collect(Collectors.toMap(
+							e -> e.getKey().replace("__lookup_search", ""),
+							e -> getList(new Router.FormInputName(e.getKey().replace("__lookup_search", "")), e.getValue())));
+			model.put("lookups", searches);
+		}
 		viewRenderer.renderView(request, response, model.build(), "detail");
+	}
+
+	protected Map<String, ?> getList(Router.FormInputName formInputName, String[] searchTerm) {
+		String lookedUpTable = dao.getTable(formInputName.table).lookupColumn(formInputName.column).get().getRemarks().replace("lookup_", "");
+		return new ImmutableMap.Builder<String, Object>()
+				.put("rows", dao.getList(lookedUpTable, 1000, searchTerm[0]))
+				.put("list_columns", dao.getListColumns(lookedUpTable))
+				.build();
 	}
 
 	protected Map<String, String[]> getState(HttpServletRequest request) {
