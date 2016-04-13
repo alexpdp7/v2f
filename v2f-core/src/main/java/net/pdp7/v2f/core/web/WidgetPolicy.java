@@ -14,6 +14,9 @@ public class WidgetPolicy {
 		if (column.getRemarks().startsWith("dropdown_")) {
 			return "dropdown";
 		}
+		if (column.getRemarks().startsWith("lookup_")) {
+			return "lookup";
+		}
 		if (column.getType().getName().equals("text") && column.getSize() > textAreaLengthThreshold) {
 			return "textarea";
 		}

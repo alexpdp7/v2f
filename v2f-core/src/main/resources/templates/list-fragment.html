@@ -1,14 +1,13 @@
-<form th:if="${has_plain_text_search}" id="_plain_text_search_form">
-	<input type="text" name="_plain_text_search" th:value="${_plain_text_search}"/>
-	<input type="submit"/>
-</form>
-
-<table>
+<table th:fragment="list(list_columns, rows, input_name)">
 	<tr>
+		<th/>
 		<th>element</th>
 		<th th:each="list_column : ${list_columns}" th:text="${list_column}">column</th>
 	</tr>
 	<tr th:each="row : ${rows}">
+		<td>
+			<input type="radio" th:name="${input_name}" th:value="${row.id}"/>
+		</td>
 		<td>
 			<a th:href="${row.link}" th:text="${row.asString}">Row as string</a>
 		</td>

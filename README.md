@@ -23,12 +23,21 @@ Each row in the master table will link to a detail view using the `_id` field.
 
 Each master-detail view *must* have an `_as_string` column, which is used to create the default user-friendly representation of the row.
 
+### `_plain_text_search` column
+
+If a master-detail view has a `_plain_text_search` column, a search box will be rendered on the list that will perform a case-insensitive search of all terms entered into this field.
+
 ### Other columns
 
 All other columns will be displayed and editable in the detail view.
+
+#### List display columns
+
+Columns named `column__list` will be shown in the list view.
 
 #### Comments
 
 Comments on columns configure how the column is displayed and edited:
 
 * `dropdown_{viewname}` will create a field to edit a foreign key column as a dropdown of choices on target `viewname`.
+* `lookup_{viewname}` will create a field to edit a foreign key column as a lookup on target `viewname`; target must have a `_plain_text_search` column.

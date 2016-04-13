@@ -1,0 +1,9 @@
+<div th:fragment="widget(column)">
+	<input type="radio" th:class="${column.cssClass}" th:name="${column.formInputName}" th:value="${column.value}" th:id="${column.formInputName + '_selected'}" checked="checked"/>
+	<label th:for="${column.formInputName + '_selected'}" th:text="${column.referencedAsString}">selected item</label>
+	<input th:name="${column.formInputName + '__lookup_search'}" th:class="${column.getCssClassForWhat('lookup_text_widget')}"/>
+	<input type="submit" name="action" value="lookup_search" th:class="${column.getCssClassForWhat('lookup_submit')}"/>
+	<div th:if="${lookups}">
+		<div th:replace="list-fragment::list(${lookups[column.formInputName]['list_columns']}, ${lookups[column.formInputName]['rows']}, ${column.formInputName})"/>
+	</div>
+</div>

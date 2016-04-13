@@ -4,12 +4,14 @@ import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.Record;
+import org.jooq.SelectJoinStep;
 
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Table;
@@ -97,12 +99,19 @@ public class DAO {
 				.execute();
 	}
 
-	public List<RowWrapper> getList(String table) {
+	public List<RowWrapper> getList(String table, int numberOfRows, String searchTerms) {
 		assertViewableView(table);
 		assert rowWrapperFactory != null;
-		return dslContext
-				.select(field("_id"), field("_as_string"))
-				.from(table)
+		SelectJoinStep<Record> select = dslContext
+				.select()
+				.from(table);
+		if (searchTerms != null) {
+			for (String term : searchTerms.split("\\s+")) {
+				select.where(field("_plain_text_search").lower().contains(term.toLowerCase(Locale.getDefault())));
+			}
+		}
+		return select
+				.limit(numberOfRows)
 				.fetch(record -> rowWrapperFactory.build(table, record, null, null));
 	}
 
@@ -111,5 +120,18 @@ public class DAO {
 		protected DAOException(String message) {
 			super(message);
 		}
+	}
+
+	public List<String> getListColumns(String table) {
+		return getTable(table)
+				.getColumns()
+				.stream()
+				.filter(c -> c.getName().endsWith("__list"))
+				.map(c -> c.getName().replace("__list", ""))
+				.collect(Collectors.toList());
+	}
+
+	public boolean hasPlainTextSearch(String table) {
+		return getTable(table).lookupColumn("_plain_text_search").isPresent();
 	}
 }

@@ -39,26 +39,36 @@ public class SaveHandler {
 	}
 
 	public void handle(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		try {
-			request.getParameterMap().entrySet().stream()
-					.filter(e -> Router.FormInputName.booleanIsFormInputName(e.getKey()))
-					.map(FormValue::new)
-					.collect(Collectors.groupingBy(FormValue::getTableAndIds))
-					.entrySet().stream()
-					.forEach(e -> save(e.getKey(), e.getValue()));
-			ServletUtils.redirect(response, request.getParameter("success_url"));
-		} catch (Exception e) {
-			Map<String, String[]> formState = new HashMap<>(request.getParameterMap());
-			formState.put("internal_error", new String[] {e.toString()});
-			UUID uuid = formStateStore.store(formState);
+		if (request.getParameter("action").equals("save")) {
 			try {
-				String redirectURI = new URIBuilder(request.getPathInfo())
-						.addParameter(FORM_STATE_PARAMETER, uuid.toString())
-						.toString();
-				ServletUtils.redirect(response, redirectURI);
-			} catch (URISyntaxException e1) {
-				throw new RuntimeException("Could not parse " + request.getPathInfo(), e1);
+				request.getParameterMap().entrySet().stream()
+						.filter(e -> Router.FormInputName.booleanIsFormInputName(e.getKey()))
+						.map(FormValue::new)
+						.collect(Collectors.groupingBy(FormValue::getTableAndIds))
+						.entrySet().stream()
+						.forEach(e -> save(e.getKey(), e.getValue()));
+				ServletUtils.redirect(response, request.getParameter("success_url"));
+			} catch (Exception e) {
+				redirectToSavedForm(request, response, e);
 			}
+			return;
+		}
+		redirectToSavedForm(request, response, null);
+	}
+
+	protected void redirectToSavedForm(HttpServletRequest request, HttpServletResponse response, Exception error) throws IOException {
+		Map<String, String[]> formState = new HashMap<>(request.getParameterMap());
+		if (error != null) {
+			formState.put("internal_error", new String[] {error.toString()});
+		}
+		UUID uuid = formStateStore.store(formState);
+		try {
+			String redirectURI = new URIBuilder(request.getPathInfo())
+					.addParameter(FORM_STATE_PARAMETER, uuid.toString())
+					.toString();
+			ServletUtils.redirect(response, redirectURI);
+		} catch (URISyntaxException e1) {
+			throw new RuntimeException("Could not parse " + request.getPathInfo(), e1);
 		}
 	}
 
@@ -66,6 +76,7 @@ public class SaveHandler {
 		String table = tableAndIds.table;
 		Map<Field<Object>, Object> fields = list
 				.stream()
+				.filter(fv -> !fv.formInputName.column.endsWith("__lookup_search"))
 				.collect(Collectors.toMap(fv -> field(fv.formInputName.column), fv -> convertToObject(fv)));
 		if (tableAndIds.id == null) {
 			dao.insert(table, fields);
