@@ -22,11 +22,11 @@ Authorization can be added simply by introducing a new `_user_id` meta-column; l
 
 Simple ready-to-use authorization modules could be provided- a self-contained authorization schema, an LDAP-integration module (perhaps using Postgres' FDW and other similar dblink features) or any other integration with authorization solutions.
 
-== Per-row, per-column editing restrictions
+## Per-row, per-column editing restrictions
 
 With `_user_id` columns and the addition of `_editable` metacolumns, certain columns could be editing-restricted on a granular basis.
 
-== Workflow support
+## Workflow support
 
 For certain columns (such as "state" columns), a secondary metaview could be provided to determine which transitions are allowed, even on a per-user basis.
 
