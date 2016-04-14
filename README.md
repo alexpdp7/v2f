@@ -7,6 +7,8 @@ The View-View Framework (v2f) is a web framework designed to develop CRUD applic
 
 v2f connects to a schema specially designed for it. The schema should *only* contain objects designed to be consumed by v2f.
 
+See [the roadmap](ROADMAP.md) for future plans.
+
 ## Master-detail views
 
 Views not prefixed by `_` get a master-detail pair of views at `/tablename/` and `/tablename/detail/id` or `/tablename/new` for adding new rows.
