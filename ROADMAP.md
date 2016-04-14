@@ -46,6 +46,14 @@ If the main handlers are enhanced to be able to receive and produce JSON, for in
 
 Once the REST/RPC frontend is implemented, it would be very simple to enhance the pure-server-side UI rendering with Javascript to simplify and streamline the UI.
 
+## Themes
+
+Aspect of the web interface should be easily customizable by some mechanism. It should be easy to package themes which could be pulled as a dependency to a v2f project. A responsive usable default theme should be provided. It should be possible to choose the theme for each user dynamically (e.g. with a `_user` metaview with a `theme` column.
+
+## Localization
+
+All elements of the interface should be localizable; users should provide resource bundles with the strings for tables/columns/etc. This mechanism can also be used to provide help hints for the application (e.g. a column's description).
+
 ## Schema design UI
 
 While v2f's focus is software developers, a UI for designing a v2f schema (and the underlying data schema) could be provided to make v2f usable for non-developers.
