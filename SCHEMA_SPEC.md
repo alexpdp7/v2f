@@ -10,6 +10,10 @@ Views not prefixed by `_` get a master-detail pair of views at `/tablename/` and
 
 Column names of master-detail views *must not* start with `_` nor contain `__` except in the special cases noted below. The `_*` namespace is reserved for view-wide extra information (such as the `_id` and `_as_string` columns described below) and `column_name__extra` are reserved to add column-specific extra information.
 
+### `_{viewname}_editable` view
+
+Automatically updatable views make using v2f simpler; under many circumnstances the database will make a master-detail view updatable so you do not have to create triggers to make it updatable. Outside those circumstances (if you use a join, for instance), the database will not be able to make your view updatable. In that situation, you can create a `_{viewname}_editable` parallel view which only contains the updatable columns and does not have joins- v2f will then use that view for inserts/updates.
+
 ### `_id` column
 
 Each master-detail view *must* have an `_id` column which is used to identify each particular entity in the view. The actual primary key in the referenced table or tables is not important- if you are referencing a table with a composite primary key, the master-detail view should adopt a strategy such as constructing the `_id` column by concatenating the primary key values.
