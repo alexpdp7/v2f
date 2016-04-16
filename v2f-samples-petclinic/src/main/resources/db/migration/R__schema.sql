@@ -92,6 +92,29 @@ create or replace view pets as
 comment on column pets.species is 'dropdown_species';
 comment on column pets.owner is 'lookup_owners';
 
+create or replace view visits as
+  select visit_id as _id,
+         pets.name || ' at ' || during || ' by ' || vets.name as _as_string,
+         pets.name as pet__list,
+         vets.name as vet__list,
+         during as during__list,
+         visits.pet_id as pet,
+         visits.vet_id as vet,
+         visits.during
+  from   petclinic.visits
+  join   petclinic.pets on visits.pet_id = pets.pet_id
+  join   petclinic.vets on visits.vet_id = vets.vet_id;
+
+comment on column visits.pet is 'lookup_pets';
+comment on column visits.vet is 'dropdown_vets';
+
+create or replace view _visits_editable as
+  select visit_id as _id,
+         visits.pet_id as pet,
+         visits.vet_id as vet,
+         visits.during
+  from   petclinic.visits;
+
 set search_path to petclinic;
 
 insert into species(name) values ('Cat'), ('Dog'), ('Iguana'), ('Lizard');
@@ -122,3 +145,16 @@ insert into pets(owner_id, species_id, name, birth)
     join   (values('Cleo'), ('Fido'), ('Spot'), ('Scully'), ('Dot'), ('Tiger')) as pet_names(pet_name) on true)
     as pets
   where selectivity < 0.03;
+
+insert into visits(vet_id, pet_id, during, notes)
+  select vet_id, pet_id, tstzrange(visit_start, visit_start + random() * interval '1 hours') as during, notes
+  from (
+    select random() as selectivity,
+           vet_id,
+           pet_id,
+           now() - (interval '800 days') + (random() * interval '1600 days') as visit_start,
+           random()::varchar as notes
+    from   vets,
+           pets)
+    as visits
+  where selectivity < 0.3;

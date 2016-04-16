@@ -6,6 +6,7 @@ import static org.jooq.impl.DSL.table;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.jooq.DSLContext;
@@ -42,7 +43,11 @@ public class DAO {
 	}
 
 	public Table getTable(String table) {
-		return getCatalog().lookupTable(getCatalog().lookupSchema(v2fSchema).get(), table).get();
+		return getTableOptional(table).get();
+	}
+
+	protected Optional<? extends Table> getTableOptional(String table) {
+		return getCatalog().lookupTable(getCatalog().lookupSchema(v2fSchema).get(), table);
 	}
 
 	public List<Table> getTables() {
@@ -86,17 +91,25 @@ public class DAO {
 
 	public void insert(String table, Map<Field<Object>, Object> fields) {
 		assertViewableView(table);
-		dslContext.insertInto(table(table))
+		dslContext.insertInto(getEditTable(table))
 				.set(fields)
 				.execute();
 	}
 
 	public void update(String table, Map<Field<Object>, Object> fields, String id) {
 		assertViewableView(table);
-		dslContext.update(table(table))
+		dslContext.update(getEditTable(table))
 				.set(fields)
 				.where(field("_id").cast(String.class).equal(id))
 				.execute();
+	}
+
+	protected org.jooq.Table<Record> getEditTable(String table) {
+		String editableTableName = "_" + table + "_editable";
+		if (getTableOptional(editableTableName).isPresent()) {
+			return table(editableTableName);
+		}
+		return table(table);
 	}
 
 	public List<RowWrapper> getList(String table, int numberOfRows, String searchTerms) {

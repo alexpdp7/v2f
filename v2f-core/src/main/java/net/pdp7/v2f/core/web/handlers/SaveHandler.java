@@ -93,6 +93,10 @@ public class SaveHandler {
 		if (type.equals("int4")) {
 			return Integer.parseInt(formValue.value);
 		}
+		if (type.equals("tstzrange")) {
+			// see https://github.com/jOOQ/jOOQ/issues/2968#issuecomment-210327626
+			return field("?::tstzrange", Object.class, formValue.value);
+		}
 		return formValue.value;
 	}
 

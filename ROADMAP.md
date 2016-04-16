@@ -1,9 +1,5 @@
 # Roadmap
 
-## Updatable views enablement
-
-v2f use is greatly helped by updatable views- if detail views are updatable, there is no need to write repetitive triggers to make them updatable. However, many RDBMSs only support automatic updating of views on simple cases, such as views which have no joins. Under many circumstances, users will need to use detail views with joins. To avoid having to write triggers, we introduce a `_{tablename}_editable` metaview which is just used for updates; even if the main view contains joins, the editable metaview shouldn't need to and just creating it should prevent the need of having to set up triggers for editing the main view.
-
 ## List editing
 
 The framework is pretty ready to handle editing in lists; detail form widgets and the save handler are completely self-contained, using a form element naming pattern which is completely compatible with editing many different rows from different tables in the same form.
