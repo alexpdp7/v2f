@@ -38,7 +38,8 @@ public class RowWrapper {
 	}
 
 	public String getLink() {
-		return record == null ? rowWrapperFactory.router.getNewRoute(table) : rowWrapperFactory.router.getDetailRoute(table, getId());
+		String linkedTable = rowWrapperFactory.dao.getLinkedTable(table);
+		return record == null ? rowWrapperFactory.router.getNewRoute(linkedTable) : rowWrapperFactory.router.getDetailRoute(linkedTable, getId());
 	}
 
 	public List<ColumnWrapper> getColumns() {

@@ -115,6 +115,18 @@ create or replace view _visits_editable as
          visits.during
   from   petclinic.visits;
 
+create or replace view vets__nested__upcoming_visits as
+  select vet_id as _parent_id,
+         visit_id as _id,
+         pets.name || ' at ' || lower(during) as _as_string,
+         pets.name as pet__list,
+         during as during__list
+  from   petclinic.visits
+  join   petclinic.pets on visits.pet_id = pets.pet_id
+  where  upper(during) > now();
+
+comment on view vets__nested__upcoming_visits is 'link_visits';
+
 set search_path to petclinic;
 
 insert into species(name) values ('Cat'), ('Dog'), ('Iguana'), ('Lizard');

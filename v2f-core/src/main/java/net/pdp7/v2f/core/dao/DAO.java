@@ -58,12 +58,20 @@ public class DAO {
 				.collect(Collectors.toList());
 	}
 
+	public List<Table> getNestedTables(String table) {
+		return getCatalog()
+				.getTables()
+				.stream()
+				.filter(t -> t.getName().startsWith(table + "__nested__"))
+				.collect(Collectors.toList());
+	}
+
 	protected boolean isViewableView(Table table) {
 		return isViewableView(table.getName());
 	}
 
 	protected boolean isViewableView(String tableName) {
-		return !tableName.startsWith("_");
+		return !tableName.startsWith("_") && !tableName.contains("__");
 	}
 
 	protected void assertViewableView(Table table) {
@@ -146,5 +154,19 @@ public class DAO {
 
 	public boolean hasPlainTextSearch(String table) {
 		return getTable(table).lookupColumn("_plain_text_search").isPresent();
+	}
+
+	public List<RowWrapper> getNestedList(String table, int numberOfRows, String parentTable, String parentId, Map<String, String[]> formState) {
+		return dslContext
+				.select()
+				.from(table)
+				.where(field("_parent_id").cast(String.class).equal(parentId))
+				.limit(numberOfRows)
+				.fetch(record -> rowWrapperFactory.build(table, record, null, formState));
+	}
+
+	public String getLinkedTable(String table) {
+		String tableComment = getTable(table).getRemarks();
+		return tableComment.startsWith("link_") ? tableComment.replaceFirst("^link_", "") : table;
 	}
 }

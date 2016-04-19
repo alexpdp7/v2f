@@ -1,11 +1,11 @@
 <table th:fragment="list(list_columns, rows, input_name)">
 	<tr>
-		<th/>
+		<th th:if="${input_name}"/>
 		<th>element</th>
 		<th th:each="list_column : ${list_columns}" th:text="${list_column}">column</th>
 	</tr>
 	<tr th:each="row : ${rows}">
-		<td>
+		<td th:if="${input_name}">
 			<input type="radio" th:name="${input_name}" th:value="${row.id}"/>
 		</td>
 		<td>
