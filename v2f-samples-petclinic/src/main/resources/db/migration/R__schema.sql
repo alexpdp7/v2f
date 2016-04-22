@@ -73,6 +73,16 @@ create or replace view owners as
          name || ' ' || email_address || ' ' || contact_information as _plain_text_search
   from   petclinic.owners;
 
+create or replace view owners__nested__pets as
+  select owner_id as _parent_id,
+         pet_id as _id,
+         name as _as_string,
+         name as name__list_edit,
+         birth as birth__list_edit
+  from   pets;
+
+comment on view owners__nested__pets is 'link_pets';
+
 create or replace view vets as
   select vet_id as _id,
          name as _as_string,
@@ -114,6 +124,18 @@ create or replace view _visits_editable as
          visits.vet_id as vet,
          visits.during
   from   petclinic.visits;
+
+create or replace view vets__nested__upcoming_visits as
+  select vet_id as _parent_id,
+         visit_id as _id,
+         pets.name || ' at ' || lower(during) as _as_string,
+         pets.name as pet__list,
+         during as during__list
+  from   petclinic.visits
+  join   petclinic.pets on visits.pet_id = pets.pet_id
+  where  upper(during) > now();
+
+comment on view vets__nested__upcoming_visits is 'link_visits';
 
 set search_path to petclinic;
 

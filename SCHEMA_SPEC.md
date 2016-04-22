@@ -42,3 +42,9 @@ Comments on columns configure how the column is displayed and edited:
 
 * `dropdown_{viewname}` will create a field to edit a foreign key column as a dropdown of choices on target `viewname`.
 * `lookup_{viewname}` will create a field to edit a foreign key column as a lookup on target `viewname`; target must have a `_plain_text_search` column.
+
+### `{viewname}__nested__{otherviewname}` nested view
+
+If you create a `{viewname}__nested__{otherviewname}` view, it will be displayed within `{viewname}`'s detail view as a list like regular top-level lists. Use a `link_{viewname}` comment to set which top-level view should elements in this table link to.
+
+Columns in editable nested views named `{column}__list_edit` will be editable in the nested table.

@@ -1,5 +1,6 @@
 package net.pdp7.v2f.core.web.handlers;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -14,9 +15,11 @@ import net.pdp7.v2f.core.dao.DAO;
 import net.pdp7.v2f.core.dao.RowWrapper;
 import net.pdp7.v2f.core.dao.RowWrapperFactory;
 import net.pdp7.v2f.core.web.FormStateStore;
+import net.pdp7.v2f.core.web.PaginationPolicy;
 import net.pdp7.v2f.core.web.Router;
 import net.pdp7.v2f.core.web.ViewRenderer;
 import net.pdp7.v2f.core.web.WidgetPolicy;
+import schemacrawler.schema.Table;
 
 public class DetailHandler {
 
@@ -25,15 +28,17 @@ public class DetailHandler {
 	protected final FormStateStore formStateStore;
 	protected final ViewRenderer viewRenderer;
 	protected final WidgetPolicy widgetPolicy;
+	protected final PaginationPolicy paginationPolicy;
 	protected Router router;
 
 	public DetailHandler(DAO dao, RowWrapperFactory rowWrapperFactory, FormStateStore formStateStore,
-			ViewRenderer viewRenderer, WidgetPolicy widgetPolicy) {
+			ViewRenderer viewRenderer, WidgetPolicy widgetPolicy, PaginationPolicy paginationPolicy) {
 		this.dao = dao;
 		this.rowWrapperFactory = rowWrapperFactory;
 		this.formStateStore = formStateStore;
 		this.viewRenderer = viewRenderer;
 		this.widgetPolicy = widgetPolicy;
+		this.paginationPolicy = paginationPolicy;
 	}
 
 	public void setRouter(Router router) {
@@ -68,6 +73,14 @@ public class DetailHandler {
 							e -> getList(new Router.FormInputName(e.getKey().replace("__lookup_search", "")), e.getValue())));
 			model.put("lookups", searches);
 		}
+
+		List<Map<String, ?>> nestedTables = dao.getNestedTables(table)
+				.stream()
+				.map(t -> getNestedList(t, id, state))
+				.collect(Collectors.toList());
+
+		model.put("nested_tables", nestedTables);
+
 		viewRenderer.renderView(request, response, model.build(), "detail");
 	}
 
@@ -76,6 +89,19 @@ public class DetailHandler {
 		return new ImmutableMap.Builder<String, Object>()
 				.put("rows", dao.getList(lookedUpTable, 1000, searchTerm[0]))
 				.put("list_columns", dao.getListColumns(lookedUpTable))
+				.build();
+	}
+
+	protected Map<String, ?> getNestedList(Table table, String id, Map<String, String[]> state) {
+		return new ImmutableMap.Builder<String, Object>()
+				.put("rows", dao.getNestedList(
+						table.getName(),
+						paginationPolicy.defaultPageSize,
+						table.getName().split("__")[0],
+						id,
+						state))
+				.put("list_columns", dao.getListColumns(table.getName()))
+				.put("list_edit_columns", dao.getListEditColumns(table.getName()))
 				.build();
 	}
 

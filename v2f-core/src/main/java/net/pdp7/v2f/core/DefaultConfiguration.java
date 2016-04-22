@@ -76,7 +76,7 @@ public class DefaultConfiguration {
 
 	@Bean
 	public DetailHandler detailHandler() {
-		return new DetailHandler(dao(), rowWrapperFactory(), formStateStore(), viewRenderer(), widgetPolicy());
+		return new DetailHandler(dao(), rowWrapperFactory(), formStateStore(), viewRenderer(), widgetPolicy(), paginationPolicy());
 	}
 
 	@Bean

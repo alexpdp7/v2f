@@ -6,6 +6,11 @@
 		<input type="text" th:replace="${column.widgetName}::widget(${column})"/>
 	</label>
 	<input type="hidden" name="success_url" th:value="${success_url}"/>
+
+	<div th:each="nested_table: ${nested_tables}">
+		<div th:replace="list-fragment::list(${nested_table['list_columns']}, ${nested_table['list_edit_columns']}, ${nested_table['rows']}, null)"/>
+	</div>
+
 	<input type="submit" name="action" value="save"/>
 </form>
 

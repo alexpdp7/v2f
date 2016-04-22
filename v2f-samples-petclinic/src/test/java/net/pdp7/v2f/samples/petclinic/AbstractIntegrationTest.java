@@ -3,6 +3,8 @@ package net.pdp7.v2f.samples.petclinic;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
 
+import java.util.Date;
+
 import org.jooq.DSLContext;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
@@ -32,12 +34,22 @@ public abstract class AbstractIntegrationTest {
 		return new HtmlUnitDriver();
 	}
 
-	protected void insertOwner(String name, String contactInformation, String emailAddress) {
-		dslContext.insertInto(table("owners"))
+	protected int insertOwner(String name, String contactInformation, String emailAddress) {
+		return (int) dslContext.insertInto(table("owners"))
 				.set(field("name"), name)
 				.set(field("contact_information"), contactInformation)
 				.set(field("email_address"), emailAddress)
-				.execute();
+				.returning(field("_id"))
+				.fetchOne().getValue("_id");
 	}
 
+	protected int insertPet(String name, int ownerId, String speciesId, Date birth) {
+		return (int) dslContext.insertInto(table("pets"))
+				.set(field("name"), name)
+				.set(field("owner"), ownerId)
+				.set(field("species"), speciesId)
+				.set(field("birth"), birth)
+				.returning(field("_id"))
+				.fetchOne().getValue("_id");
+	}
 }
