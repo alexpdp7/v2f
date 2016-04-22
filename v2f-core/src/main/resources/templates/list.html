@@ -3,6 +3,6 @@
 	<input type="submit"/>
 </form>
 
-<div th:replace="list-fragment::list(${list_columns}, ${rows}, null)"/>
+<div th:replace="list-fragment::list(${list_columns}, null, ${rows}, null)"/>
 
 <a th:href="${new_url}">new</a>

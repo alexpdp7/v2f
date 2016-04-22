@@ -14,10 +14,6 @@ Column names of master-detail views *must not* start with `_` nor contain `__` e
 
 Automatically updatable views make using v2f simpler; under many circumnstances the database will make a master-detail view updatable so you do not have to create triggers to make it updatable. Outside those circumstances (if you use a join, for instance), the database will not be able to make your view updatable. In that situation, you can create a `_{viewname}_editable` parallel view which only contains the updatable columns and does not have joins- v2f will then use that view for inserts/updates.
 
-### `{viewname}__nested__{otherviewname}` nested view
-
-If you create a `{viewname}__nested__{otherviewname}` view, it will be displayed within `{viewname}`'s detail view as a list like regular top-level lists. Use a `link_{viewname}` comment to set which top-level view should elements in this table link to.
-
 ### `_id` column
 
 Each master-detail view *must* have an `_id` column which is used to identify each particular entity in the view. The actual primary key in the referenced table or tables is not important- if you are referencing a table with a composite primary key, the master-detail view should adopt a strategy such as constructing the `_id` column by concatenating the primary key values.
@@ -46,3 +42,9 @@ Comments on columns configure how the column is displayed and edited:
 
 * `dropdown_{viewname}` will create a field to edit a foreign key column as a dropdown of choices on target `viewname`.
 * `lookup_{viewname}` will create a field to edit a foreign key column as a lookup on target `viewname`; target must have a `_plain_text_search` column.
+
+### `{viewname}__nested__{otherviewname}` nested view
+
+If you create a `{viewname}__nested__{otherviewname}` view, it will be displayed within `{viewname}`'s detail view as a list like regular top-level lists. Use a `link_{viewname}` comment to set which top-level view should elements in this table link to.
+
+Columns in editable nested views named `{column}__list_edit` will be editable in the nested table.

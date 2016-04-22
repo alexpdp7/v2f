@@ -54,6 +54,10 @@ public class RowWrapper {
 		return record.getValue(column + "__list");
 	}
 
+	public ColumnWrapper getListEditColumn(String column) {
+		return new ColumnWrapper(rowWrapperFactory.dao.getTable(table).lookupColumn(column + "__list_edit").get());
+	}
+
 	public class ColumnWrapper {
 
 		protected final Column column;

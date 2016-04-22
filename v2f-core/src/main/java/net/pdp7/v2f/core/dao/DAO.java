@@ -74,12 +74,22 @@ public class DAO {
 		return !tableName.startsWith("_") && !tableName.contains("__");
 	}
 
+	protected boolean isEditableView(String tableName) {
+		return isViewableView(tableName) || tableName.contains("__nested__");
+	}
+
 	protected void assertViewableView(Table table) {
 		assertViewableView(table.getName());
 	}
 
 	protected void assertViewableView(String tableName) {
 		if (!isViewableView(tableName)) {
+			throw new DAOException("table " + tableName + " is not viewable");
+		}
+	}
+
+	protected void assertEditableView(String tableName) {
+		if (!isEditableView(tableName)) {
 			throw new DAOException("table " + tableName + " is not viewable");
 		}
 	}
@@ -98,14 +108,14 @@ public class DAO {
 	}
 
 	public void insert(String table, Map<Field<Object>, Object> fields) {
-		assertViewableView(table);
+		assertEditableView(table);
 		dslContext.insertInto(getEditTable(table))
 				.set(fields)
 				.execute();
 	}
 
 	public void update(String table, Map<Field<Object>, Object> fields, String id) {
-		assertViewableView(table);
+		assertEditableView(table);
 		dslContext.update(getEditTable(table))
 				.set(fields)
 				.where(field("_id").cast(String.class).equal(id))
@@ -149,6 +159,15 @@ public class DAO {
 				.stream()
 				.filter(c -> c.getName().endsWith("__list"))
 				.map(c -> c.getName().replace("__list", ""))
+				.collect(Collectors.toList());
+	}
+
+	public List<String> getListEditColumns(String table) {
+		return getTable(table)
+				.getColumns()
+				.stream()
+				.filter(c -> c.getName().endsWith("__list_edit"))
+				.map(c -> c.getName().replace("__list_edit", ""))
 				.collect(Collectors.toList());
 	}
 

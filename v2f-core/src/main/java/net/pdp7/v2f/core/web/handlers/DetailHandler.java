@@ -101,6 +101,7 @@ public class DetailHandler {
 						id,
 						state))
 				.put("list_columns", dao.getListColumns(table.getName()))
+				.put("list_edit_columns", dao.getListEditColumns(table.getName()))
 				.build();
 	}
 

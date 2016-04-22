@@ -73,6 +73,16 @@ create or replace view owners as
          name || ' ' || email_address || ' ' || contact_information as _plain_text_search
   from   petclinic.owners;
 
+create or replace view owners__nested__pets as
+  select owner_id as _parent_id,
+         pet_id as _id,
+         name as _as_string,
+         name as name__list_edit,
+         birth as birth__list_edit
+  from   pets;
+
+comment on view owners__nested__pets is 'link_pets';
+
 create or replace view vets as
   select vet_id as _id,
          name as _as_string,
