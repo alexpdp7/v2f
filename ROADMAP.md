@@ -6,10 +6,6 @@ The framework is pretty ready to handle editing in lists; detail form widgets an
 
 New meta-columns such as `_list_editable` could be added to customize this, on a per-row, per-column and per-user basis.
 
-## Inline related list editing
-
-Once list editing is implemented, one can create secondary detail views `{main_table}__{secondary_table}` which contains a `_parent_id` column to join it to the main table. This could be displayed inline in the master view's detail view to allow easy editing of related objects.
-
 ## Authorization
 
 Authorization can be added simply by introducing a new `_user_id` meta-column; logged in users get all their views filtered by `_user_id`, giving them a personalized view of the database.
