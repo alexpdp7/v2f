@@ -3,6 +3,7 @@
 First compile the application and generate a self-contained jar:
 
     $ mvn install -pl v2f-core
+    $ mvn install -pl v2f-themes-bootstrap
     $ mvn -pl v2f-samples-petclinic package spring-boot:repackage
 
 Then set up a Postgres instance and a connected Java instance running the application:

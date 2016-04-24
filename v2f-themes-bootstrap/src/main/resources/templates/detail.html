@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+	<body layout:fragment="body">
+		<ol class="breadcrumb">
+			<li><a href="/">Home</a></li>
+			<li><a href="#" th:href="${success_url}">List</a></li>
+			<li class="active">Detail</li>
+		</ol>
+
+		<p th:text="${internal_error}" th:if="${internal_error}" class="alert alert-danger" role="alert">Error!</p>
+
+		<form th:action="${row.link}" method="post">
+			<div class="form-group" th:each="column: ${row.columns}">
+				<label th:inline="text" th:for="${column.formInputName}" th:text="${column.name}">
+					input label
+				</label>
+				<input type="text" th:replace="${column.widgetName}::widget(${column})" class="form-control"/>
+			</div>
+			<input type="hidden" name="success_url" th:value="${success_url}"/>
+
+			<div th:each="nested_table: ${nested_tables}">
+				<div th:replace="list-fragment::list(${nested_table['list_columns']}, ${nested_table['list_edit_columns']}, ${nested_table['rows']}, null)"/>
+			</div>
+
+			<input type="submit" name="action" value="save" class="btn btn-primary"/>
+		</form>
+	</body>
+</html>

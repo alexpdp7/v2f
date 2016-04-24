@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+	<body layout:fragment="body">
+		<ol class="breadcrumb">
+			<li><a href="/">Home</a></li>
+			<li class="active">List</li>
+		</ol>
+
+		<form th:if="${has_plain_text_search}" id="_plain_text_search_form" class="form-inline">
+			<div class="form-group">
+				<label class="sr-only" for="_plain_text_search">Text search</label>
+				<div class="input-group">
+					<div class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></div>
+					<input type="text" name="_plain_text_search" th:value="${_plain_text_search}" class="form-control" placeholder="Terms to search"/>
+				</div>
+				<input type="submit" class="btn btn-primary"/>
+			</div>
+		</form>
+
+		<div th:replace="list-fragment::list(${list_columns}, null, ${rows}, null)"/>
+
+		<a th:href="${new_url}" class="btn btn-primary">new</a>
+	</body>
+</html>

@@ -2,7 +2,6 @@ package net.pdp7.v2f.samples.petclinic;
 
 import static org.jooq.impl.DSL.field;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.junit.Assert;
@@ -38,8 +37,7 @@ public class StateStoreTest extends AbstractIntegrationTest {
 
 	protected void createSpecies(WebDriver driver, String name) {
 		driver.get(getRoute("/species/new/"));
-		List<WebElement> labels = driver.findElements(By.tagName("label"));
-		WebElement nameInput = labels.get(0).findElement(By.tagName("textarea"));
+		WebElement nameInput = driver.findElement(By.tagName("textarea"));
 		nameInput.clear();
 		nameInput.sendKeys(name);
 		driver.findElement(By.cssSelector("input[type=submit]")).click();

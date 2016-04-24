@@ -2,7 +2,6 @@ package net.pdp7.v2f.samples.petclinic;
 
 import static org.jooq.impl.DSL.field;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -64,14 +63,13 @@ public class BasicCRUDTest extends AbstractIntegrationTest {
 	}
 
 	protected void fillFields(String name, String contactInformation, String emailAddress, WebDriver driver) {
-		List<WebElement> labels = driver.findElements(By.tagName("label"));
-		WebElement nameInput = labels.get(0).findElement(By.tagName("textarea"));
+		WebElement nameInput = driver.findElement(By.cssSelector(".edit_column_name"));
 		nameInput.clear();
 		nameInput.sendKeys(name);
-		WebElement contactInformationInput = labels.get(1).findElement(By.tagName("textarea"));
+		WebElement contactInformationInput = driver.findElement(By.cssSelector(".edit_column_contact_information"));
 		contactInformationInput.clear();
 		contactInformationInput.sendKeys(contactInformation);
-		WebElement emailAddressInput = labels.get(2).findElement(By.tagName("input"));
+		WebElement emailAddressInput = driver.findElement(By.cssSelector(".edit_column_email_address"));
 		emailAddressInput.clear();
 		emailAddressInput.sendKeys(emailAddress);
 		driver.findElement(By.cssSelector("input[type=submit]")).click();

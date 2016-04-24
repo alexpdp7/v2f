@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+	<body layout:fragment="body">
+		<ol class="breadcrumb">
+			<li class="active">Home</li>
+		</ol>
+
+		<ul class="table_list">
+			<li th:each="table_to_route : ${tables_to_routes}">
+				<a th:href="${table_to_route.value}" th:text="${table_to_route.key}">table</a>
+			</li>
+		</ul>
+	</body>
+</html>
