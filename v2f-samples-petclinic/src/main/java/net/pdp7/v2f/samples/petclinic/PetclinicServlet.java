@@ -8,7 +8,7 @@ import net.pdp7.v2f.core.web.Router;
 import net.pdp7.v2f.core.web.V2FServlet;
 import net.pdp7.v2f.core.web.handlers.SaveHandler;
 
-@WebServlet
+@WebServlet(urlPatterns = {"", "/pets/*", "/visits/*", "/species/*", "/vets/*", "/owners/*"})
 public class PetclinicServlet extends V2FServlet {
 
 	@Autowired
