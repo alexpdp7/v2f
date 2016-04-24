@@ -63,7 +63,7 @@ public class SaveHandler {
 		}
 		UUID uuid = formStateStore.store(formState);
 		try {
-			String redirectURI = new URIBuilder(request.getPathInfo())
+			String redirectURI = new URIBuilder(request.getRequestURI())
 					.addParameter(FORM_STATE_PARAMETER, uuid.toString())
 					.toString();
 			ServletUtils.redirect(response, redirectURI);

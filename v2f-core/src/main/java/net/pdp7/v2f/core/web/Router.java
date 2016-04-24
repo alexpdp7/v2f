@@ -53,7 +53,7 @@ public class Router {
 
 	public void route(HttpServletRequest request, HttpServletResponse response)
 			throws RouteNotFoundException, IOException {
-		findRoute(request.getPathInfo()).execute(request, response);
+		findRoute(request.getRequestURI()).execute(request, response);
 	}
 
 	public String getListTableRoute(String table) {
