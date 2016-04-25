@@ -41,6 +41,11 @@
 		</dependency>
 		<dependency>
 			<groupId>net.pdp7</groupId>
+			<artifactId>v2f-themes-bootstrap</artifactId>
+			<version>master</version>
+		</dependency>
+		<dependency>
+			<groupId>net.pdp7</groupId>
 			<artifactId>v2f-core</artifactId>
 			<version>master</version>
 		</dependency>

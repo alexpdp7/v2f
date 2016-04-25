@@ -1,0 +1,20 @@
+<table th:fragment="list(list_columns, list_edit_columns, rows, input_name)" class="table table-striped table-hover">
+	<tr>
+		<th th:if="${input_name}"/>
+		<th>element</th>
+		<th th:each="list_column : ${list_columns}" th:text="${list_column}">column</th>
+		<th th:each="list_edit_column : ${list_edit_columns}" th:text="${list_edit_column}">editable column</th>
+	</tr>
+	<tr th:each="row : ${rows}">
+		<td th:if="${input_name}">
+			<input type="radio" th:name="${input_name}" th:value="${row.id}"/>
+		</td>
+		<td>
+			<a th:href="${row.link}" th:text="${row.asString}">Row as string</a>
+		</td>
+		<td th:each="list_column : ${list_columns}" th:text="${row.getListColumn(list_column)}">value</td>
+		<td th:each="list_edit_column : ${list_edit_columns}">
+			<input type="text" th:replace="${row.getListEditColumn(list_edit_column).widgetName}::widget(${row.getListEditColumn(list_edit_column)})"/>
+		</td>
+	</tr>
+</table>

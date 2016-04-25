@@ -1,0 +1,15 @@
+<div th:fragment="widget(column)">
+	<input type="radio" th:class="${column.cssClass}" th:name="${column.formInputName}" th:value="${column.value}" th:id="${column.formInputName + '_selected'}" checked="checked"/>
+	<label th:for="${column.formInputName + '_selected'}" th:text="${column.referencedAsString}">selected item</label>
+	<div class="form-group form-inline">
+		<label class="sr-only" th:for="${column.formInputName + '__lookup_search'}">Text search</label>
+		<div class="input-group">
+			<div class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></div>
+			<input type="text" th:name="${column.formInputName + '__lookup_search'}" th:id="${column.formInputName + '__lookup_search'}" th:class="'form-control ' + ${column.getCssClassForWhat('lookup_text_widget')}" class="form-control" placeholder="Terms to search"/>
+		</div>
+		<input type="submit" name="action" value="lookup_search" class="btn btn-primary" th:class="'btn btn-primary ' + ${column.getCssClassForWhat('lookup_submit')}"/>
+	</div>
+	<div th:if="${lookups}">
+		<div th:replace="list-fragment::list(${lookups[column.formInputName]['list_columns']}, null, ${lookups[column.formInputName]['rows']}, ${column.formInputName})"/>
+	</div>
+</div>
