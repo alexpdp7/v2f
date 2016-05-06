@@ -16,20 +16,18 @@ import org.jooq.SelectJoinStep;
 
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Table;
-import schemacrawler.schemacrawler.SchemaCrawlerOptions;
-import schemacrawler.utility.SchemaCrawlerUtility;
 
 public class DAO {
 
 	protected final DSLContext dslContext;
 	protected final String v2fSchema;
 	protected RowWrapperFactory rowWrapperFactory;
-	protected final SchemaCrawlerOptions schemaCrawlerOptions;
+	protected final CatalogRepository catalogRepository;
 
-	public DAO(DSLContext dslContext, String v2fSchema, SchemaCrawlerOptions schemaCrawlerOptions) {
+	public DAO(DSLContext dslContext, String v2fSchema, CatalogRepository catalogRepository) {
 		this.dslContext = dslContext;
 		this.v2fSchema = v2fSchema;
-		this.schemaCrawlerOptions = schemaCrawlerOptions;
+		this.catalogRepository = catalogRepository;
 	}
 
 	public void setRowWrapperFactory(RowWrapperFactory rowWrapperFactory) {
@@ -37,9 +35,7 @@ public class DAO {
 	}
 
 	public Catalog getCatalog() {
-		// This should be cached, however note that this method should be careful
-		// so that it does not execute until the database has been setup!
-		return (Catalog) dslContext.connectionResult(connection -> SchemaCrawlerUtility.getCatalog(connection, schemaCrawlerOptions));
+		return catalogRepository.getCatalog();
 	}
 
 	public Table getTable(String table) {
