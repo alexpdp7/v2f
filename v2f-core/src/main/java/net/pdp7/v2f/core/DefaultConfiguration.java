@@ -6,6 +6,7 @@ import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationInitializer;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +17,9 @@ import net.pdp7.v2f.core.dao.CatalogRepository;
 import net.pdp7.v2f.core.dao.DAO;
 import net.pdp7.v2f.core.dao.RowWrapperFactory;
 import net.pdp7.v2f.core.web.FormStateStore;
-import net.pdp7.v2f.core.web.MemoryFormStateStore;
 import net.pdp7.v2f.core.web.PaginationPolicy;
 import net.pdp7.v2f.core.web.Router;
+import net.pdp7.v2f.core.web.SpringCacheFormStateStore;
 import net.pdp7.v2f.core.web.ViewRenderer;
 import net.pdp7.v2f.core.web.WidgetPolicy;
 import net.pdp7.v2f.core.web.handlers.DetailHandler;
@@ -58,8 +59,7 @@ public class DefaultConfiguration {
 	}
 	@Bean
 	public FormStateStore formStateStore() {
-		// This is a naive implementation, not for serious production usage
-		return new MemoryFormStateStore();
+		return new SpringCacheFormStateStore(cacheManager, "formStates");
 	}
 
 	@Bean
@@ -122,4 +122,7 @@ public class DefaultConfiguration {
 
 	@Autowired
 	public ThymeleafViewResolver viewResolver;
+
+	@Autowired
+	public CacheManager cacheManager;
 }
