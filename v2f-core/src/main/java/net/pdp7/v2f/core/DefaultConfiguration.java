@@ -6,11 +6,13 @@ import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationInitializer;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
+import net.pdp7.v2f.core.dao.CatalogRepository;
 import net.pdp7.v2f.core.dao.DAO;
 import net.pdp7.v2f.core.dao.RowWrapperFactory;
 import net.pdp7.v2f.core.web.FormStateStore;
@@ -26,6 +28,7 @@ import net.pdp7.v2f.core.web.handlers.SaveHandler;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 
 @Configuration
+@EnableCaching
 @SuppressWarnings("PMD.TooManyMethods")
 public class DefaultConfiguration {
 
@@ -46,9 +49,13 @@ public class DefaultConfiguration {
 
 	@Bean
 	public DAO dao() {
-		return new DAO(dslContext, v2fSchema, schemaCrawlerOptions());
+		return new DAO(dslContext, v2fSchema, catalogRepository());
 	}
 
+	@Bean
+	public CatalogRepository catalogRepository() {
+		return new CatalogRepository(dslContext, schemaCrawlerOptions());
+	}
 	@Bean
 	public FormStateStore formStateStore() {
 		// This is a naive implementation, not for serious production usage
