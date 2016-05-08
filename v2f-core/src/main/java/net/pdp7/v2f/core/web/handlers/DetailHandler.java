@@ -59,7 +59,8 @@ public class DetailHandler {
 				state);
 		Builder<String, Object> model = new ImmutableMap.Builder<String, Object>()
 				.put("row", row)
-				.put("success_url", router.getListTableRoute(table));
+				.put("success_url", router.getListTableRoute(table))
+				.put("table", table);
 
 		if (internalError != null) {
 			model.put("internal_error", internalError);
