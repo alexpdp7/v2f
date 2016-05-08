@@ -5,8 +5,8 @@
 			<li class="active">Home</li>
 		</ol>
 
-		<ul class="table_list">
-			<li th:each="table_to_route : ${tables_to_routes}">
+		<ul class="table_list nav nav-pills nav-stacked">
+			<li th:each="table_to_route : ${tables_to_routes}" class="presentation">
 				<a th:href="${table_to_route.value}" th:text="${table_to_route.key}">table</a>
 			</li>
 		</ul>
