@@ -9,6 +9,8 @@ v2f consumes a schema designed for it. Database views in the schema result in ma
 
 v2f is implemented as a servlet application using Spring, jOOQ, SchemaCrawler and Thymeleaf, although using v2f should entail only writing some SQL and pointing v2f to the desired schema.
 
+You can view a demo at http://v2f-samples-petclinic.pdp7.net/, which is a deployed version of the [Petclinic](https://github.com/alexpdp7/v2f/tree/master/v2f-samples-petclinic) application included in the source, which is defined by just [a very simple schema](https://github.com/alexpdp7/v2f/blob/master/v2f-samples-petclinic/src/main/resources/db/migration/R__schema.sql).
+
 See [the roadmap](ROADMAP.md) for future plans.
 See [the schema spec](SCHEMA_SPEC.md) to learn how to implement a schema for v2f.
 See [the guide for v2f development](HACKING.md) to learn how to contribute and extend v2f.
