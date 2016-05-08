@@ -91,16 +91,29 @@ create or replace view vets as
 
 create or replace view pets as
   select pet_id as _id,
-         name as _as_string,
-         name,
-         species_id as species,
+         pets.name as _as_string,
+         pets.name,
+         pets.species_id as species,
+         species.name as species__list,
          birth,
-         owner_id as owner,
-         name as _plain_text_search
-  from   petclinic.pets;
+         pets.owner_id as owner,
+         owners.name as owners__list,
+         pets.name || ' ' || species.name || ' ' || owners.name as _plain_text_search
+  from   petclinic.pets
+  join   petclinic.species on pets.species_id = species.species_id
+  join   petclinic.owners on pets.owner_id = owners.owner_id;
 
 comment on column pets.species is 'dropdown_species';
 comment on column pets.owner is 'lookup_owners';
+
+create or replace view _pets_editable as
+  select pet_id as _id,
+         pets.name as _as_string,
+         pets.name,
+         pets.species_id as species,
+         birth,
+         pets.owner_id as owner
+  from   petclinic.pets;
 
 create or replace view visits as
   select visit_id as _id,

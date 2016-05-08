@@ -3,8 +3,8 @@
 	<body layout:fragment="body">
 		<ol class="breadcrumb">
 			<li><a href="/">Home</a></li>
-			<li><a href="#" th:href="${success_url}">List</a></li>
-			<li class="active">Detail</li>
+			<li><a href="#" th:href="${success_url}" th:text="${table}">Table elements</a></li>
+			<li class="active" th:text="${row.asString ?: 'new'}">Element</li>
 		</ol>
 
 		<p th:text="${internal_error}" th:if="${internal_error}" class="alert alert-danger" role="alert">Error!</p>
@@ -19,6 +19,7 @@
 			<input type="hidden" name="success_url" th:value="${success_url}"/>
 
 			<div th:each="nested_table: ${nested_tables}">
+				<h2 th:text="${nested_table['name']}">Nested</h2>
 				<div th:replace="list-fragment::list(${nested_table['list_columns']}, ${nested_table['list_edit_columns']}, ${nested_table['rows']}, null)"/>
 			</div>
 

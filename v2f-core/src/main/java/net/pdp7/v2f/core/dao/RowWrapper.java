@@ -29,7 +29,7 @@ public class RowWrapper {
 	}
 
 	public String getAsString() {
-		return (String) record.getValue("_as_string");
+		return record == null ? null : (String) record.getValue("_as_string");
 	}
 
 	/** @return null for "new" rows */

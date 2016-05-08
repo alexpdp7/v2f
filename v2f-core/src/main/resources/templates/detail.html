@@ -8,6 +8,7 @@
 	<input type="hidden" name="success_url" th:value="${success_url}"/>
 
 	<div th:each="nested_table: ${nested_tables}">
+		<p th:text="${nested_table['name']}">Nested</h2>
 		<div th:replace="list-fragment::list(${nested_table['list_columns']}, ${nested_table['list_edit_columns']}, ${nested_table['rows']}, null)"/>
 	</div>
 
