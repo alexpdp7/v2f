@@ -94,15 +94,19 @@ public class DetailHandler {
 	}
 
 	protected Map<String, ?> getNestedList(Table table, String id, Map<String, String[]> state) {
+		String[] tableParts = table.getName().split("__");
+		String parentTable = tableParts[0];
+		String nestedName = tableParts[2];
 		return new ImmutableMap.Builder<String, Object>()
 				.put("rows", dao.getNestedList(
 						table.getName(),
 						paginationPolicy.defaultPageSize,
-						table.getName().split("__")[0],
+						parentTable,
 						id,
 						state))
 				.put("list_columns", dao.getListColumns(table.getName()))
 				.put("list_edit_columns", dao.getListEditColumns(table.getName()))
+				.put("name", nestedName)
 				.build();
 	}
 
