@@ -3,7 +3,7 @@
 	<body layout:fragment="body">
 		<ol class="breadcrumb">
 			<li><a href="/">Home</a></li>
-			<li class="active">List</li>
+			<li class="active" th:text="${table}">Table elements</li>
 		</ol>
 
 		<form th:if="${has_plain_text_search}" id="_plain_text_search_form" class="form-inline">

@@ -42,7 +42,8 @@ public class ListHandler {
 				.put("rows", rows)
 				.put("list_columns", dao.getListColumns(table))
 				.put("has_plain_text_search", dao.hasPlainTextSearch(table))
-				.put("new_url", router.getNewRoute(table));
+				.put("new_url", router.getNewRoute(table))
+				.put("table", table);
 		if (plainTextSearch != null) {
 			model.put("_plain_text_search", plainTextSearch);
 		}
