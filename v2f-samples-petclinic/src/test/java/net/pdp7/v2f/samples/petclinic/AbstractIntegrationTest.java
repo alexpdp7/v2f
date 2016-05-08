@@ -44,7 +44,7 @@ public abstract class AbstractIntegrationTest {
 	}
 
 	protected int insertPet(String name, int ownerId, String speciesId, Date birth) {
-		return (int) dslContext.insertInto(table("pets"))
+		return (int) dslContext.insertInto(table("_pets_editable"))
 				.set(field("name"), name)
 				.set(field("owner"), ownerId)
 				.set(field("species"), speciesId)
