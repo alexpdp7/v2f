@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/alexpdp7/v2f.svg?branch=master)](https://travis-ci.org/alexpdp7/v2f)
-[![Coverage Status](https://coveralls.io/repos/github/alexpdp7/v2f/badge.svg?branch=master)](https://coveralls.io/github/alexpdp7/v2f?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/alexpdp7/v2f/badge.svg?branch=master)](https://coveralls.io/github/alexpdp7/v2f?branch=master) -
+[Demo](http://v2f-samples-petclinic.pdp7.net/) -
+[Roadmap Survey](https://docs.google.com/forms/d/1IGLxia5lYiq9Y7CV09uh_hXQElzGwL2jYw6QhH8-vUk/viewform)
 
 # v2f
 
