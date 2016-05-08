@@ -46,6 +46,10 @@ Aspect of the web interface should be easily customizable by some mechanism. It 
 
 All elements of the interface should be localizable; users should provide resource bundles with the strings for tables/columns/etc. This mechanism can also be used to provide help hints for the application (e.g. a column's description).
 
+## Auditing
+
+Record all changes performed to the database and provide a user interface for users to consult it
+
 ## Schema design UI
 
 While v2f's focus is software developers, a UI for designing a v2f schema (and the underlying data schema) could be provided to make v2f usable for non-developers.
