@@ -1,7 +1,8 @@
 [![Build Status](https://travis-ci.org/alexpdp7/v2f.svg?branch=master)](https://travis-ci.org/alexpdp7/v2f)
 [![Coverage Status](https://coveralls.io/repos/github/alexpdp7/v2f/badge.svg?branch=master)](https://coveralls.io/github/alexpdp7/v2f?branch=master) -
 [Demo](http://v2f-samples-petclinic.pdp7.net/) -
-[Roadmap Survey](https://docs.google.com/forms/d/1IGLxia5lYiq9Y7CV09uh_hXQElzGwL2jYw6QhH8-vUk/viewform)
+[Roadmap Survey](https://docs.google.com/forms/d/1IGLxia5lYiq9Y7CV09uh_hXQElzGwL2jYw6QhH8-vUk/viewform) -
+[Blog](https://v2fblog.wordpress.com/)
 
 # v2f
 
@@ -16,3 +17,4 @@ You can view a demo at http://v2f-samples-petclinic.pdp7.net/, which is a deploy
 See [the roadmap](ROADMAP.md) for future plans.
 See [the schema spec](SCHEMA_SPEC.md) to learn how to implement a schema for v2f.
 See [the guide for v2f development](HACKING.md) to learn how to contribute and extend v2f.
+See [the blog](https://v2fblog.wordpress.com/) for an extended background and mission.
