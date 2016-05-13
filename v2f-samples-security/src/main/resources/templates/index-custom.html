@@ -1,0 +1,20 @@
+<html>
+	<body>
+		<div th:fragment="body_text" class="jumbotron">
+			<div class="page-header">
+				<h1>Welcome to the v2f security sample!</h1>
+			</div>
+
+			<p>
+				This is the sample security application for
+				<a href="https://github.com/alexpdp7/v2f">v2f</a> which
+				demonstrates how security can be handled in v2f applications.
+			</p>
+			
+			<form method="POST" action="/logout">
+				<input type="submit" value="Logout"/>
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+			</form>
+		</div>
+	</body>
+</html>

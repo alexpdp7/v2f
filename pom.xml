@@ -9,6 +9,7 @@
 		<module>v2f-core</module>
 		<module>v2f-themes-bootstrap</module>
 		<module>v2f-samples-petclinic</module>
+		<module>v2f-samples-security</module>
 		<module>v2f-coverage</module>
 	</modules>
 
