@@ -1,0 +1,5 @@
+<form th:fragment="logout(cssClass, user)" method="POST" action="/logout" th:class="${cssClass}">
+	<span th:text="${user}">user</span>
+	<input type="submit" value="Logout"/>
+	<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+</form>

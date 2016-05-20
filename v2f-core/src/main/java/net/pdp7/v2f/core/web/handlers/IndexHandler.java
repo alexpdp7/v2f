@@ -29,7 +29,10 @@ public class IndexHandler {
 				.stream()
 				.map(t -> t.getName())
 				.collect(Collectors.toMap(s -> s, s -> router.getListTableRoute(s)));
-		ImmutableMap<String, Map<String, String>> model = ImmutableMap.of("tables_to_routes", tablesToRoutes);
+		ImmutableMap<String, Object> model = new ImmutableMap.Builder<String, Object>()
+				.put("tables_to_routes", tablesToRoutes)
+				.put("user", request.getRemoteUser())
+				.build();
 		viewRenderer.renderView(request, response, model, "index");
 	}
 

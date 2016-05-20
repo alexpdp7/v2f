@@ -5,6 +5,13 @@
 		<script src="/webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 	</head>
-	<body layout:fragment="body" class="container">
+	<body class="container">
+		<nav class="navbar navbar-default">
+			<div class="navbar-header">
+				<span class="navbar-brand">V2F</span>
+			</div>
+			<div th:replace="logout-component::logout('navbar-form navbar-right', ${user})"/>
+		</nav>
+		<div layout:fragment="body" th:remove="tag"/>
 	</body>
 </html>
