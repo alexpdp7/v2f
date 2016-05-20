@@ -24,7 +24,8 @@ set search_path to v2f_samples_security, security;
 create view users as
   select user_id as _id,
          user_id as _as_string,
-         user_id as user_name
+         user_id as user_name,
+         password as password
   from   security.users;
 
 create view _users as
