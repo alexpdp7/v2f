@@ -9,3 +9,5 @@ v2f is hosted in GitHub, and contributions should be sent as a pull request. v2f
 All features should be covered by an integration test in the sample applications.
 
 Currently the code is a mess as I am developing this as a prototype/proof-of-concept in my limited spare time. Unit tests are mostly absent and the code is terrible and needs more "object orientation" (i.e. using strongly typed classes instead of lists and maps).
+
+To run tests and/or the v2f-samples-petclinic application, you need a PostgreSQL instance listening on localhost:5432 with [the appropriate user and database created](v2f-samples-petclinic/src/main/resources/application.properties). If you have Docker, there is [a script to provision one](docker_petclinic_db).
