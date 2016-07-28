@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 
 import net.pdp7.v2f.core.dao.DAO;
 import net.pdp7.v2f.core.web.Router;
@@ -29,11 +30,15 @@ public class IndexHandler {
 				.stream()
 				.map(t -> t.getName())
 				.collect(Collectors.toMap(s -> s, s -> router.getListTableRoute(s)));
-		ImmutableMap<String, Object> model = new ImmutableMap.Builder<String, Object>()
-				.put("tables_to_routes", tablesToRoutes)
-				.put("user", request.getRemoteUser())
-				.build();
-		viewRenderer.renderView(request, response, model, "index");
+		Builder<String, Object> model = new ImmutableMap.Builder<String, Object>()
+				.put("tables_to_routes", tablesToRoutes);
+
+		String user = request.getRemoteUser();
+		if (user != null) {
+			model.put("user", user);
+		}
+
+		viewRenderer.renderView(request, response, model.build(), "index");
 	}
 
 	public void setRouter(Router router) {

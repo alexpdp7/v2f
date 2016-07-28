@@ -39,7 +39,6 @@ public class ListHandler {
 		String plainTextSearch = request.getParameter("_plain_text_search");
 		List<RowWrapper> rows = dao.getList(table, paginationPolicy.defaultPageSize, plainTextSearch);
 		Builder<String, Object> model = new ImmutableMap.Builder<String, Object>()
-				.put("user", request.getRemoteUser())
 				.put("rows", rows)
 				.put("list_columns", dao.getListColumns(table))
 				.put("has_plain_text_search", dao.hasPlainTextSearch(table))
@@ -47,6 +46,11 @@ public class ListHandler {
 				.put("table", table);
 		if (plainTextSearch != null) {
 			model.put("_plain_text_search", plainTextSearch);
+		}
+
+		String user = request.getRemoteUser();
+		if (user != null) {
+			model.put("user", user);
 		}
 		viewRenderer.renderView(request, response, model.build(), "list");
 	}

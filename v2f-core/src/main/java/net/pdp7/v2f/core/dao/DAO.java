@@ -12,7 +12,9 @@ import java.util.stream.Collectors;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.Record;
+import org.jooq.SelectConditionStep;
 import org.jooq.SelectJoinStep;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Table;
@@ -92,10 +94,8 @@ public class DAO {
 
 	public Record loadRecord(String table, String id) {
 		assertViewableView(table);
-		Record record = dslContext
-				.select()
-				.from(table)
-				.where(field("_id").cast(String.class).equal(id))
+		Record record = selectFrom(table)
+				.and(field("_id").cast(String.class).equal(id))
 				.fetchOne();
 		if (record == null) {
 			throw new DAOException("could not load record with id " + id);
@@ -129,17 +129,28 @@ public class DAO {
 	public List<RowWrapper> getList(String table, int numberOfRows, String searchTerms) {
 		assertViewableView(table);
 		assert rowWrapperFactory != null;
-		SelectJoinStep<Record> select = dslContext
-				.select()
-				.from(table);
+		SelectConditionStep<Record> select = selectFrom(table);
 		if (searchTerms != null) {
 			for (String term : searchTerms.split("\\s+")) {
-				select.where(field("_plain_text_search").lower().contains(term.toLowerCase(Locale.getDefault())));
+				select.and(field("_plain_text_search").lower().contains(term.toLowerCase(Locale.getDefault())));
 			}
 		}
 		return select
 				.limit(numberOfRows)
 				.fetch(record -> rowWrapperFactory.build(table, record, null, null));
+	}
+
+	protected SelectConditionStep<Record> selectFrom(String table) {
+		SelectJoinStep<Record> allTable = dslContext
+				.select()
+				.from(table);
+		String permissionsTableName = table + "__permissions";
+		if (getTableOptional(permissionsTableName).isPresent()) {
+			return allTable
+					.join(permissionsTableName).using(field("_id"))
+					.where(field("_user_id").equal(SecurityContextHolder.getContext().getAuthentication().getName()));
+		}
+		return allTable.where("true");
 	}
 
 	public static class DAOException extends RuntimeException {
@@ -172,10 +183,8 @@ public class DAO {
 	}
 
 	public List<RowWrapper> getNestedList(String table, int numberOfRows, String parentTable, String parentId, Map<String, String[]> formState) {
-		return dslContext
-				.select()
-				.from(table)
-				.where(field("_parent_id").cast(String.class).equal(parentId))
+		return selectFrom(table)
+				.and(field("_parent_id").cast(String.class).equal(parentId))
 				.limit(numberOfRows)
 				.fetch(record -> rowWrapperFactory.build(table, record, null, formState));
 	}

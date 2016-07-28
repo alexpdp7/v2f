@@ -58,10 +58,14 @@ public class DetailHandler {
 				id == null ? "0" : null,
 				state);
 		Builder<String, Object> model = new ImmutableMap.Builder<String, Object>()
-				.put("user", request.getRemoteUser())
 				.put("row", row)
 				.put("success_url", router.getListTableRoute(table))
 				.put("table", table);
+
+		String user = request.getRemoteUser();
+		if (user != null) {
+			model.put("user", user);
+		}
 
 		if (internalError != null) {
 			model.put("internal_error", internalError);
