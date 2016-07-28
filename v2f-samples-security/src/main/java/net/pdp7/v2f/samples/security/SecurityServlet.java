@@ -8,7 +8,7 @@ import net.pdp7.v2f.core.web.Router;
 import net.pdp7.v2f.core.web.V2FServlet;
 import net.pdp7.v2f.core.web.handlers.SaveHandler;
 
-@WebServlet(urlPatterns = {"", "/users/*"})
+@WebServlet(urlPatterns = {"", "/users/*", "/private_items/*"})
 public class SecurityServlet extends V2FServlet {
 
 	@Autowired
