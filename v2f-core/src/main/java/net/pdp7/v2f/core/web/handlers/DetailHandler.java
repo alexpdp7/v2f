@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
 
 import net.pdp7.v2f.core.dao.DAO;
 import net.pdp7.v2f.core.dao.RowWrapper;
@@ -48,7 +47,7 @@ public class DetailHandler {
 	/**
 	 * @param id is null for "new" rows
 	 */
-	public void handle(String table, String id, HttpServletRequest request, HttpServletResponse response) {
+	public void handle(String table, String id, HttpServletRequest request, HttpServletResponse response, ImmutableMap.Builder<String, Object> model) {
 		assert router != null : this + " router not configured";
 		Map<String, String[]> state = getState(request);
 		String internalError = getInternalError(state);
@@ -57,15 +56,10 @@ public class DetailHandler {
 				id == null ? null : dao.loadRecord(table, id),
 				id == null ? "0" : null,
 				state);
-		Builder<String, Object> model = new ImmutableMap.Builder<String, Object>()
+		model
 				.put("row", row)
 				.put("success_url", router.getListTableRoute(table))
 				.put("table", table);
-
-		String user = request.getRemoteUser();
-		if (user != null) {
-			model.put("user", user);
-		}
 
 		if (internalError != null) {
 			model.put("internal_error", internalError);

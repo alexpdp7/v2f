@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.net.UrlEscapers;
 
 import net.pdp7.v2f.core.web.handlers.DetailHandler;
@@ -101,6 +102,16 @@ public class Router {
 
 	protected abstract class Route {
 		protected abstract void execute(HttpServletRequest request, HttpServletResponse response) throws IOException;
+
+		protected ImmutableMap.Builder<String, Object> createBaseModel(HttpServletRequest request) {
+			ImmutableMap.Builder<String, Object> model = new ImmutableMap.Builder<String, Object>();
+
+			String user = request.getRemoteUser();
+			if (user != null) {
+				model.put("user", user);
+			}
+			return model;
+		}
 	}
 
 	protected class IndexRoute extends Route {
@@ -114,7 +125,7 @@ public class Router {
 
 		@Override
 		protected void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-			indexHandler.handle(request, response);
+			indexHandler.handle(request, response, createBaseModel(request));
 		}
 	}
 
@@ -131,7 +142,7 @@ public class Router {
 
 		@Override
 		protected void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-			listHandler.handle(table, request, response);
+			listHandler.handle(table, request, response, createBaseModel(request));
 		}
 	}
 
@@ -150,7 +161,7 @@ public class Router {
 
 		@Override
 		protected void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-			detailHandler.handle(table, id, request, response);
+			detailHandler.handle(table, id, request, response, createBaseModel(request));
 		}
 	}
 
@@ -167,7 +178,7 @@ public class Router {
 
 		@Override
 		protected void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-			detailHandler.handle(table, null, request, response);
+			detailHandler.handle(table, null, request, response, createBaseModel(request));
 		}
 	}
 
