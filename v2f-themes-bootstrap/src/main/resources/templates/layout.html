@@ -10,7 +10,9 @@
 			<div class="navbar-header">
 				<span class="navbar-brand">V2F</span>
 			</div>
-			<div th:replace="logout-component::logout('navbar-form navbar-right', ${user})"/>
+			<div th:if="${user}" th:remove="tag">
+				<div th:replace="logout-component::logout('navbar-form navbar-right', ${user})" th:if="${false}"/>
+			</div>
 		</nav>
 		<div layout:fragment="body" th:remove="tag"/>
 	</body>
